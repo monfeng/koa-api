@@ -23,6 +23,7 @@ mongoose.connect(config.db, {useNewUrlParser:true}, (err) => {
     console.error('Failed to connect to database')
   } else {
     console.log('第三：Connecting database successfully')
+    db.close()
   }
 })
 const db = mongoose.connection
@@ -45,13 +46,13 @@ db.on('connected', ()=>{
 })
 
 db.on('disconnecting', ()=>{
-  console.log('db disconnecting...')
+  console.log('关闭第一：db disconnecting...')
 })
 db.on('disconnected', ()=>{
-  console.log('db disconnected')
+  console.log('关闭第二：db disconnected')
 })
 db.on('close', ()=>{
-  console.log('db close')
+  console.log('关闭第三：db close')
 })
 
 app.use(bodyParser({

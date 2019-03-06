@@ -2,6 +2,7 @@ const uuidv1 = require('uuid/v1');
 const config = require('../config')
 const passwordUtil = require('../utils/password')
 const Example_col = require('../models/example');
+const User_col = require('../models/user');
 
 const about = ctx => {
   console.log('about接口')
@@ -9,10 +10,19 @@ const about = ctx => {
   ctx.response.body = '<a href="/">Index Page</a>'
 }
   
-const main = ctx => {
+const main = async ctx => {
   console.log('main接口')
-  console.log(ctx.name)
-  ctx.response.body = 'Hello World'
+  // 获取用户的 userId
+  const user = await User_col.findOne({
+    userId: ctx.userId
+  });
+  console.log(user)
+  ctx.status = 200;
+  ctx.body = {
+    code: 0,
+    data: user,
+    userId: ctx.userId
+  }
 }
 
 

@@ -19,8 +19,8 @@ const VerifyToken = async(ctx, next) => {
     try {
       const tokenContent = await jwt.verify(authorization, config.secret);
       console.log(tokenContent)
-      console.log(tokenContent.name)
-      ctx.name = tokenContent.name
+      console.log(tokenContent.userId)
+      ctx.userId = tokenContent.userId
       console.log('鉴权成功');
     } catch (error) {
       console.log(error.name)

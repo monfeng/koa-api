@@ -2,6 +2,7 @@ const uuidv1 = require('uuid/v1');
 const config = require('../config')
 const passwordUtil = require('../utils/password')
 const User_col = require('../models/user');
+const setToken = require('../utils/jwt-token')
 
 
 // 登录
@@ -32,7 +33,8 @@ const login = async (ctx) => {
     ctx.status = 200;
     ctx.body = {
       code: 0,
-      msg: 'account is not exit!'
+      msg: 'account is not exit!',
+      data: user
     }
     return;
   }
@@ -41,17 +43,22 @@ const login = async (ctx) => {
   const match = await passwordUtil.validate(password, user.password);
   ctx.status = 200;
   if (match) {
+    const token = setToken({
+      userId: user.userId
+    })
     ctx.body = {
       code: 1,
       msg: 'login success',
-      data: user
+      data: user,
+      token
     }
     return;
   }
 
   ctx.body = {
     code: 0,
-    msg: 'account or password error!'
+    msg: 'account or password error!',
+    data: user
   }
 }
 

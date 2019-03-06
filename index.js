@@ -61,12 +61,6 @@ db.on('close', ()=>{
 // 获取token
 app.use(verify)
 
-// app.use(
-//   jwtKoa({secret: config.secret})
-//     .unless({
-//       path: [/\/login/] // 不需要通过jwt验证的请求路径
-//     })
-// )
 
 app.use(bodyParser({
   onerror:  (err, ctx) => {

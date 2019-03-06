@@ -10,12 +10,12 @@ const VerifyToken = async(ctx, next) => {
   }
 
   if (url.indexOf('/auth') > -1) {
+    // 登录的接口不需要token
     await next()
   } else {
     try {
       const tokenContent = await jwt.verify(authorization, config.secret);
-      console.log(tokenContent)
-      console.log(tokenContent.userId)
+      // 全局设置userId，数据库的查找
       ctx.userId = tokenContent.userId
     } catch (error) {
       if ('TokenExpiredError' === error.name) {

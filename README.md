@@ -9,3 +9,6 @@
 
 ## 登录jwt
 - [koa 实现 jwt 认证](https://juejin.im/post/5a1ae1cdf265da431d3c6337)
+
+### 数据库
+- [mongoose中文文档](https://cn.mongoosedoc.top/docs/cnhome.html)

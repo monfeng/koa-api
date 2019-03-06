@@ -1,7 +1,5 @@
 const Koa = require('koa')
-// https://www.npmjs.com/package/koa-bodyparser
 const bodyParser = require('koa-bodyparser')
-// https://cn.mongoosedoc.top/docs/cnhome.html
 const mongoose = require('mongoose')
 const config = require('./config')
 const example_router = require('./routes/example-route')

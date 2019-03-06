@@ -4,13 +4,14 @@ const passwordUtil = require('../utils/password')
 const Example_col = require('../models/example');
 
 const about = ctx => {
-  console.log('about')
+  console.log('about接口')
   ctx.response.type = 'html'
   ctx.response.body = '<a href="/">Index Page</a>'
 }
   
 const main = ctx => {
-  console.log('main')
+  console.log('main接口')
+  console.log(ctx.name)
   ctx.response.body = 'Hello World'
 }
 

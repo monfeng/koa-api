@@ -5,6 +5,7 @@ const bodyParser = require('koa-bodyparser')
 const mongoose = require('mongoose')
 const config = require('./config')
 const example_router = require('./routes/example-route')
+const user_router = require('./routes/user-route')
 const app = new Koa()
 
 // 连接数据库
@@ -27,6 +28,7 @@ app.use(bodyParser({
 // app.use中间件，全局只有app.use的功能
 // 支持链接使用
 app.use(example_router.routes()).use(example_router.allowedMethods())
+app.use(user_router.routes()).use(user_router.allowedMethods())
 
 // error事件的检测，防止服务器挂掉
 // app.on('error', (err) => {

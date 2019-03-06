@@ -5,8 +5,10 @@ const bodyParser = require('koa-bodyparser')
 // https://cn.mongoosedoc.top/docs/cnhome.html
 const mongoose = require('mongoose')
 const config = require('./config')
+const jwtKoa = require('koa-jwt')
 const example_router = require('./routes/example-route')
 const user_router = require('./routes/user-route')
+
 const app = new Koa()
 
 
@@ -23,7 +25,7 @@ mongoose.connect(config.db, {useNewUrlParser:true}, (err) => {
     console.error('Failed to connect to database')
   } else {
     console.log('第三：Connecting database successfully')
-    db.close()
+    // db.close()
   }
 })
 const db = mongoose.connection
@@ -54,6 +56,27 @@ db.on('disconnected', ()=>{
 db.on('close', ()=>{
   console.log('关闭第三：db close')
 })
+
+
+app.use((ctx, next) => {
+  // 拦截后面的token
+  return next().catch((err) => {
+    console.log(err)
+    if (401 == err.status) {
+      ctx.status = 401
+      ctx.body = 'Protected resource, use Authorization header to get access'
+    } else {
+      throw err
+    }
+  })
+})
+
+app.use(
+  jwtKoa({secret: config.secret})
+    .unless({
+      path: [/\/login/] // 不需要通过jwt验证的请求路径
+    })
+)
 
 app.use(bodyParser({
   onerror:  (err, ctx) => {

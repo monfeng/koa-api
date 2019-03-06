@@ -16,4 +16,10 @@ app.use(bodyParser({
 // 支持链接使用
 app.use(example_router.routes()).use(example_router.allowedMethods())
 
+// error事件的检测，防止服务器挂掉
+// app.on('error', (err) => {
+//   console.log('logging error ', err.message)
+//   console.log(err)
+// })
+
 app.listen(3000)

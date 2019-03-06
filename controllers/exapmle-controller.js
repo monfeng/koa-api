@@ -32,8 +32,21 @@ const signin = async (ctx, next) => {
     }
   }
 
+
+// 错误处理
+const err = ctx => {
+    ctx.throw(500);
+  };
+
+const nofound = ctx => {
+ctx.response.status = 404;
+  ctx.response.body = 'Page Not Found';
+}
+
 module.exports = {
   about,
   main,
-  signin
+  signin,
+  err,
+  nofound
 }

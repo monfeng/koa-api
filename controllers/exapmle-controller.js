@@ -14,6 +14,58 @@ const main = ctx => {
   ctx.response.body = 'Hello World'
 }
 
+
+// 登录
+const login = async (ctx) => {
+  const body = ctx.request.body
+  const {name, password} = body
+  console.log(`signin with name: ${name}, password: ${password}`);
+  ctx.status = 200;
+  if (!name || !password) {
+    ctx.status = 401;
+    ctx.body = {
+      msg: 'post request!!',
+      desc: `parameter error！！name: ${name} password: ${password}`,
+      data: body
+    }
+    return;
+  }
+
+  // 获取用户的 userId
+  const user = await Example_col.findOne({
+    account: name
+  }, {
+    __v: 0,
+    _id: 0
+  });
+  console.log(user)
+  if (!user) {
+    ctx.status = 200;
+    ctx.body = {
+      code: 0,
+      msg: 'account is not exit!'
+    }
+    return;
+  }
+
+  // 验证密码的正确性
+  const match = await passwordUtil.validate(password, user.password);
+  ctx.status = 200;
+  if (match) {
+    ctx.body = {
+      code: 1,
+      msg: 'login success',
+      data: user
+    }
+    return;
+  }
+
+  ctx.body = {
+    code: 0,
+    msg: 'account or password error!'
+  }
+}
+
 const signin = async (ctx) => {
     const body = ctx.request.body
     const {name, password} = body
@@ -28,6 +80,23 @@ const signin = async (ctx) => {
       }
       return;
     }
+
+    // 获取用户的 userId
+    const user = await Example_col.findOne({
+      account: name
+    }, {
+      __v: 0,
+      _id: 0
+    });
+    if (user) {
+      ctx.status = 401;
+      ctx.body = {
+        code: 0,
+        msg: 'account is exit!'
+      }
+      return;
+    }
+
     // 插入新用户
     const userId = uuidv1();
     const hash = await passwordUtil.encrypt(password, config.saltTimes);
@@ -55,5 +124,6 @@ module.exports = {
   main,
   signin,
   err,
-  nofound
+  nofound,
+  login
 }

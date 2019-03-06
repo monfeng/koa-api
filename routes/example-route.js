@@ -6,6 +6,7 @@ const exampleController = require('../controllers/exapmle-controller')
 router.get('/main', exampleController.main)
 router.get('/about', exampleController.about)
 router.post('/signin', exampleController.signin)
+router.post('/login', exampleController.login)
 
 // 错误的路由
 router.get('/err', exampleController.err)

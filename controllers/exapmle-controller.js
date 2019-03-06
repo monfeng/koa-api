@@ -1,3 +1,5 @@
+const Example_col = require('../models/example');
+
 const about = ctx => {
   console.log('about')
   ctx.response.type = 'html'
@@ -9,26 +11,27 @@ const main = ctx => {
   ctx.response.body = 'Hello World'
 }
 
-const signin = async (ctx, next) => {
-    const req = ctx.request.body
-    let name = ctx.request.body.name || ''
-    let password = ctx.request.body.password || ''
-    console.log(req)
+const signin = async (ctx) => {
+    const body = ctx.request.body
+    let name = body.name || ''
+    let password = body.password || ''
     console.log(`signin with name: ${name}, password: ${password}`);
-    if (name === 'koa' && password === '12345') {
-        ctx.status = 200;
-        ctx.body = {
-          msg: 'post request!!',
-          desc: 'insert success!',
-          data: 'success'
-        }
-    } else {
+    ctx.status = 200;
+    if (!name || !password) {
       ctx.status = 401;
       ctx.body = {
-        msg: 'bad meseage!!',
-        desc: 'insert success!',
-        data: 'error'
+        msg: 'post request!!',
+        desc: `parameter error！！msg: ${body.msg}`,
+        data: body
       }
+      return;
+    }
+
+    const result = await Example_col.create({account: name, password});
+    ctx.body = {
+      msg: 'post request!!',
+      desc: 'insert success!',
+      data: result
     }
   }
 

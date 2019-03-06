@@ -1,8 +1,20 @@
 const Koa = require('koa')
+// https://www.npmjs.com/package/koa-bodyparser
 const bodyParser = require('koa-bodyparser')
+// https://github.com/Automattic/mongoose
+const mongoose = require('mongoose')
+const config = require('./config')
 const example_router = require('./routes/example-route')
 const app = new Koa()
 
+// 连接数据库
+mongoose.connect(config.db, {useNewUrlParser:true}, (err) => {
+  if (err) {
+    console.error('Failed to connect to database')
+  } else {
+    console.log('Connecting database successfully')
+  }
+})
 
 app.use(bodyParser({
   onerror:  (err, ctx) => {
@@ -22,4 +34,4 @@ app.use(example_router.routes()).use(example_router.allowedMethods())
 //   console.log(err)
 // })
 
-app.listen(3000)
+app.listen(config.port)

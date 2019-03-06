@@ -1,14 +1,13 @@
 const Koa = require('koa')
 // https://www.npmjs.com/package/koa-bodyparser
 const bodyParser = require('koa-bodyparser')
-// https://github.com/Automattic/mongoose
 // https://cn.mongoosedoc.top/docs/cnhome.html
 const mongoose = require('mongoose')
 const config = require('./config')
-// const jwtKoa = require('koa-jwt')
 const example_router = require('./routes/example-route')
 const user_router = require('./routes/user-route')
 const verify = require('./middleware/verify')
+const auth_router = require('./routes/auth-route')
 
 const app = new Koa()
 
@@ -74,11 +73,6 @@ app.use(bodyParser({
 // 支持链接使用
 app.use(example_router.routes()).use(example_router.allowedMethods())
 app.use(user_router.routes()).use(user_router.allowedMethods())
-
-// error事件的检测，防止服务器挂掉
-// app.on('error', (err) => {
-//   console.log('logging error ', err.message)
-//   console.log(err)
-// })
+app.use(auth_router.routes()).use(auth_router.allowedMethods())
 
 app.listen(config.port)

@@ -9,7 +9,7 @@ const VerifyToken = async(ctx, next) => {
     ctx.throw(401, 'no token detected in http header \'Authorization\'');
   }
 
-  if (url.indexOf('/users') > -1) {
+  if (url.indexOf('/auth') > -1) {
     await next()
   } else {
     try {

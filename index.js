@@ -2,6 +2,7 @@ const Koa = require('koa')
 const router = require('koa-router')()
 const bodyParser = require('koa-bodyparser')
 const app = new Koa()
+app.use(bodyParser())
 
 
 const about = ctx => {
@@ -21,7 +22,32 @@ const main = ctx => {
 router.get('/', main)
 router.get('/about', about)
 
-app.use(bodyParser())
+//POST请求
+router.post('/signin', async (ctx, next) => {
+  const req = ctx.request.body
+  let name = ctx.request.body.name || ''
+  let password = ctx.request.body.password || ''
+  console.log(req)
+  console.log(`signin with name: ${name}, password: ${password}`);
+  if (name === 'koa' && password === '12345') {
+      ctx.status = 200;
+      ctx.body = {
+        msg: 'post request!!',
+        desc: 'insert success!',
+        data: 'success'
+      }
+  } else {
+    ctx.status = 401;
+    ctx.body = {
+      msg: 'bad meseage!!',
+      desc: 'insert success!',
+      data: 'error'
+    }
+  }
+});
+
+
+
 app.use(router.routes())
 
 app.listen(3000)

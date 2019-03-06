@@ -1,3 +1,4 @@
+// https://github.com/auth0/node-jsonwebtoken
 const  jwt = require('jsonwebtoken')
 const config = require('../config')
 

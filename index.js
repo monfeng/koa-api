@@ -2,9 +2,10 @@ const Koa = require('koa')
 const bodyParser = require('koa-bodyparser')
 const mongoose = require('mongoose')
 const config = require('./config')
+const verify = require('./middleware/verify')
+const cors = require('./middleware/cors')
 const example_router = require('./routes/example-route')
 const user_router = require('./routes/user-route')
-const verify = require('./middleware/verify')
 const auth_router = require('./routes/auth-route')
 
 const app = new Koa()
@@ -55,6 +56,8 @@ db.on('close', ()=>{
   console.log('关闭第三：db close')
 })
 
+// 允许非简单请求
+// app.use(cors.setOptions)
 // 获取token
 app.use(verify)
 
@@ -67,10 +70,14 @@ app.use(bodyParser({
 
 
 
+
+
 // app.use中间件，全局只有app.use的功能
 // 支持链接使用
 app.use(example_router.routes()).use(example_router.allowedMethods())
 app.use(user_router.routes()).use(user_router.allowedMethods())
 app.use(auth_router.routes()).use(auth_router.allowedMethods())
 
-app.listen(config.port)
+app.listen(config.port, () => {
+  console.log('服务器成功启动')
+})

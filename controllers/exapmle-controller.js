@@ -5,9 +5,8 @@ const Example_col = require('../models/example');
 const User_col = require('../models/user');
 
 const about = ctx => {
-  console.log('about接口')
-  ctx.response.type = 'html'
-  ctx.response.body = '<a href="/">Index Page</a>'
+  console.log(ctx.request.body)
+  ctx.body = '666666'
 }
   
 const main = async ctx => {

@@ -57,7 +57,8 @@ db.on('close', ()=>{
 })
 
 // 允许非简单请求
-// app.use(cors.setOptions)
+app.use(cors.setOptions)
+app.use(cors.setCors)
 // 获取token
 app.use(verify)
 

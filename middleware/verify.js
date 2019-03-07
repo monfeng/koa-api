@@ -4,11 +4,13 @@ const config = require('../config')
 
 const VerifyToken = async(ctx, next) => {
   const authorization = ctx.get('Authorization');
+  // console.log(ctx.method)
+  // if (ctx.method !== 'OPTIONS' && !authorization) {
+  //   // 头部信息与服务器进行协商，看是否符合服务器应答条件
+  //   ctx.throw(401, 'no token detected in http header \'Authorization\'');
+  // }
   const url = ctx.path
-
-  if (!authorization) {
-    ctx.throw(401, 'no token detected in http header \'Authorization\'');
-  }
+  console.log(url)
 
   if (url.indexOf('/auth') > -1) {
     // 登录的接口不需要token

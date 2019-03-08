@@ -3,7 +3,7 @@ const bodyParser = require('koa-bodyparser')
 const mongoose = require('mongoose')
 const config = require('./config')
 const verify = require('./middleware/verify')
-const cors = require('./middleware/cors')
+const koaCors = require('./middleware/cors')
 const example_router = require('./routes/example-route')
 const user_router = require('./routes/user-route')
 const auth_router = require('./routes/auth-route')
@@ -56,9 +56,8 @@ db.on('close', ()=>{
   console.log('关闭第三：db close')
 })
 
-// 允许非简单请求
-app.use(cors.setOptions)
-app.use(cors.setCors)
+app.use(koaCors)
+
 // 获取token
 app.use(verify)
 

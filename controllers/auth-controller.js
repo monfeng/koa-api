@@ -8,9 +8,9 @@ const setToken = require('../utils/jwt-token')
 // 登录
 const login = async (ctx) => {
   const body = ctx.request.body
-  const {name, password} = body
+  const {email, password} = body
   ctx.status = 200;
-  if (!name || !password) {
+  if (!email || !password) {
     ctx.status = 401;
     ctx.body = {
       code: 0,
@@ -23,7 +23,7 @@ const login = async (ctx) => {
 
   // 获取用户的 userId和密码，找不到为null
   const user = await Auth_col.findOne({
-    account: name
+    account: email
   });
 
   if (!user) {
@@ -37,8 +37,11 @@ const login = async (ctx) => {
     return;
   }
 
+  console.log(user)
+
   // 验证密码的正确性
   const match = await passwordUtil.validate(password, user.password);
+  console.log(match)
   ctx.status = 200;
   if (match) {
     const token = setToken({
@@ -68,9 +71,9 @@ const login = async (ctx) => {
  */
 const register = async (ctx) => {
     const body = ctx.request.body
-    const {name, password} = body
+    const {email, password, mobile} = body
     ctx.status = 200;
-    if (!name || !password) {
+    if (!email || !password || !mobile) {
       ctx.status = 401;
       ctx.body = {
         code: 0,
@@ -83,7 +86,7 @@ const register = async (ctx) => {
 
     // 获取用户的 userId
     const user = await Auth_col.findOne({
-      account: name
+      account: email
     });
     if (user) {
       ctx.status = 401;
@@ -100,7 +103,7 @@ const register = async (ctx) => {
 
     // 加密密码
     const hash = await passwordUtil.encrypt(password, config.saltTimes);
-    await Auth_col.create({account: name, password: hash, userId});
+    await Auth_col.create({account: email, password: hash, userId, mobile});
     ctx.body = {
       code: 1,
       msg: 'insert success',

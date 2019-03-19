@@ -5,7 +5,6 @@ const config = require('./config')
 const verify = require('./middleware/verify')
 const koaCors = require('./middleware/cors')
 const example_router = require('./routes/example-route')
-const user_router = require('./routes/user-route')
 const auth_router = require('./routes/auth-route')
 
 const app = new Koa()
@@ -75,7 +74,6 @@ app.use(bodyParser({
 // app.use中间件，全局只有app.use的功能
 // 支持链接使用
 app.use(example_router.routes()).use(example_router.allowedMethods())
-app.use(user_router.routes()).use(user_router.allowedMethods())
 app.use(auth_router.routes()).use(auth_router.allowedMethods())
 
 app.listen(config.port, () => {

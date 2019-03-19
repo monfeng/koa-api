@@ -2,7 +2,7 @@ const uuidv1 = require('uuid/v1');
 const config = require('../config')
 const passwordUtil = require('../utils/password')
 const Example_col = require('../models/example');
-const User_col = require('../models/user');
+const User_col = require('../models/student');
 
 const about = ctx => {
   console.log(ctx.request.body)

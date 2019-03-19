@@ -20,7 +20,7 @@ const userSchema = new Schema({
     type: String
   },
   province: {
-    type: string
+    type: String
   }
 }, { collection: 'user', versionKey: false})
 

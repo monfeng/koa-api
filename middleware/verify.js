@@ -6,6 +6,7 @@ const VerifyToken = async(ctx, next) => {
   if (ctx.method !== 'OPTIONS') {
     const authorization = ctx.get('Authorization');
     const url = ctx.path
+    console.log(url)
     if (url.indexOf('/auth') < 0) {
       try {
         const tokenContent = await jwt.verify(authorization, config.secret);

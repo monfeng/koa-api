@@ -50,6 +50,7 @@ const login = async (ctx) => {
     ctx.body = {
       code: 1,
       msg: 'login success',
+      desc: '登录成功',
       data: {
         token
       }

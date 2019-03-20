@@ -59,7 +59,7 @@ const handleMsg = async ctx => {
   <FromUserName><![CDATA[${formatted.ToUserName}]]></FromUserName> 
   <CreateTime>${new Date().getTime()}</CreateTime> 
   <MsgType><![CDATA[text]]></MsgType> 
-  <Content><![CDATA[这儿是JavaScript之禅]]></Content> 
+  <Content><![CDATA[这儿是JavaScript之禅,老子是nodejs的后台啊]]></Content> 
   </xml>`);
 };
 

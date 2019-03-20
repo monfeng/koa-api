@@ -1,5 +1,4 @@
 const uuidv1 = require('uuid/v1');
-const config = require('../config')
 const passwordUtil = require('../utils/password')
 const Auth_col = require('../models/auth');
 const setToken = require('../utils/jwt-token')
@@ -103,7 +102,7 @@ const register = async (ctx) => {
     const userId = uuidv1();
 
     // 加密密码
-    const hash = await passwordUtil.encrypt(password, config.saltTimes);
+    const hash = await passwordUtil.encrypt(password);
     await Auth_col.create({account: email, password: hash, userId, mobile});
     ctx.body = {
       code: 1,

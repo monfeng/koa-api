@@ -1,14 +1,16 @@
-// https://www.npmjs.com/package/bcrypt
-const bcrypt = require('bcrypt');
+//导入加密模块,导入node自带的加密模块(不需要安装)
+const crypto = require("crypto");
 
-const encrypt = async (password, saltTimes) => {
-  const hash = await bcrypt.hash(password, saltTimes);
-  return hash; 
+const encrypt = async (password) => {
+  let md5 = crypto.createHash("md5");
+  let newPas = md5.update(password).digest("hex");
+  return newPas; 
 };
 
-const validate = async (password, hash) => {
-  const match = await bcrypt.compare(password, hash);
-  return match;
+const validate = async (password, dataBasePassword) => {
+  let md5 = crypto.createHash("md5");
+  let newPas = md5.update(password).digest("hex");
+  return newPas === dataBasePassword
 };
 
 module.exports = {

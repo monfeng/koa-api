@@ -4,7 +4,7 @@ const exampleController = require('../controllers/exapmle-controller')
 
 
 router.get('/main', exampleController.main)
-router.put('/about', exampleController.about)
+router.get('/about', exampleController.about)
 router.post('/signin', exampleController.signin)
 router.post('/login', exampleController.login)
 

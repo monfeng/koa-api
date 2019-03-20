@@ -3,7 +3,6 @@ const  jwt = require('jsonwebtoken')
 const config = require('../config')
 const VerityUrl = 'v1/base/'
 const VerifyToken = async(ctx, next) => {
-  console.log(ctx.method)
   if (ctx.method !== 'OPTIONS') {
     const authorization = ctx.get('Authorization');
     const url = ctx.path
@@ -20,10 +19,8 @@ const VerifyToken = async(ctx, next) => {
         ctx.throw(401, 'invalid token');
       }
     }
-    console.log(1)
     await next()
   } else {
-    console.log(3)
     await next()
   }
   

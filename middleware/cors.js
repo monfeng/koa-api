@@ -1,6 +1,5 @@
 
 const koaCors = async (ctx, next) => {
-  console.log(ctx.request.header.origin)
   if (ctx.method === 'OPTIONS') {
     // 该字段必需，它的值是逗号分隔的一个字符串，表明服务器支持的所有跨域请求的方法。注意，返回的是所有支持的方法，而不单是浏览器请求的那个方法。这是为了避免多次"预检"请求。
     ctx.set('Access-Control-Allow-Methods', 'PUT,DELETE,POST,GET');

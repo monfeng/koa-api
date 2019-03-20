@@ -1,8 +1,10 @@
-// https://blog.csdn.net/lihefei_coder/article/details/81907638
+// Nodejs + express 开发微信公众号模板消息推送功能： https://blog.csdn.net/lihefei_coder/article/details/81907638
 
 // nodejs实现微信公众号基本事件推回复：https://www.jianshu.com/p/f96b9169eec4
 
 // koa的基本回复：https://www.jb51.net/article/140296.htm
+
+// 内网工具：natapp.cn/login 按照教程下载客户端进行配置
 
 // openid oVB5OwyVDKfTZq4T61_p2roSg1tA
 

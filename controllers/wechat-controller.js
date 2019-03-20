@@ -6,6 +6,8 @@
 
 // openid oVB5OwyVDKfTZq4T61_p2roSg1tA
 
+// 微信配置是get请求，完成一次后，以后的东西都发到对于的post里面去
+
 const crypto = require("crypto"); //引入加密模块
 const config = require("../config/wechat"); //引入配置文件
 const getRawBody = require("raw-body");

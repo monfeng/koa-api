@@ -62,11 +62,11 @@ app.use(koaCors)
 app.use(verify)
 
 
-app.use(bodyParser({
-  onerror:  (err, ctx) => {
-    ctx.throw('body parse error', 422)
-  }
-}))
+// app.use(bodyParser({
+//   onerror:  (err, ctx) => {
+//     ctx.throw('body parse error', 422)
+//   }
+// }))
 
 
 

@@ -4,7 +4,7 @@ function parseXML(xml) {
     xml2js.parseString(
       xml,
       { trim: true, explicitArray: false, ignoreAttrs: true },
-      function(err, result) {
+      function (err, result) {
         if (err) {
           return reject(err)
         }

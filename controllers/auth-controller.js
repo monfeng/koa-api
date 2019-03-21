@@ -39,7 +39,7 @@ const login = async (ctx) => {
   console.log(user)
 
   // 验证密码的正确性
-  const match = await passwordUtil.validate(password, user.password);
+  const match = passwordUtil.validate(password, user.password);
   console.log(match)
   ctx.status = 200;
   if (match) {
@@ -102,7 +102,7 @@ const register = async (ctx) => {
     const userId = uuidv1();
 
     // 加密密码
-    const hash = await passwordUtil.encrypt(password);
+    const hash = passwordUtil.encrypt(password);
     await Auth_col.create({account: email, password: hash, userId, mobile});
     ctx.body = {
       code: 1,

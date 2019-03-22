@@ -44,11 +44,11 @@ const Add = async (ctx, Document_Model) => {
 
 const List = async (ctx, Document_Model) => {
   const body = ctx.request.body
-  const {page = 1, limit = 10, query = {}} = body
+  const {page = 1, limit = 10, query = {}, sort = {}} = body
 
   try {
     const offset = (page - 1) * limit
-    const data = await Document_Model.find(query).skip(offset).limit(limit)
+    const data = await Document_Model.find(query).sort(sort).skip(offset).limit(limit)
     const count = await Document_Model.estimatedDocumentCount()
     ctx.status = 200
     ctx.body = {

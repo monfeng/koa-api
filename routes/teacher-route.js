@@ -1,12 +1,23 @@
 const Router = require('koa-router')
 const router = new Router({prefix: '/teacher'})
-const teacherController = require('../controllers/teacher-controller')
+const Teacher_col = require('../models/teacher')
+const baseApi = require('../controllers/baseApi')
 
 
-router.post('/add', teacherController.addTeacher)
-router.post('/list', teacherController.findTeacherList)
-router.get('/:id', teacherController.findTeacher)
-router.put('/:id', teacherController.updateTeacher)
-router.delete('/:id', teacherController.delTeacher)
+router.post('/add', async (ctx) => {
+  await baseApi.Add(ctx, Teacher_col)
+})
+router.post('/list', async (ctx) => {
+  await baseApi.List(ctx, Teacher_col)
+})
+router.get('/:id', async (ctx) => {
+  await baseApi.Detail(ctx, Teacher_col)
+})
+router.put('/:id', async (ctx) => {
+  await baseApi.Update(ctx, Teacher_col)
+})
+router.delete('/:id', async (ctx) => {
+  await baseApi.Del(ctx, Teacher_col)
+})
 
 module.exports = router

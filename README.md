@@ -7,7 +7,20 @@
 - [nodejs+koa2+mongodb 从0到1搭建自己的项目](https://juejin.im/post/5bad9b1af265da0ae80120fe)
 - [前后端分离 Vue + NodeJS(Koa) + MongoDB，从产品到开发，全栈实践](https://juejin.im/post/5b850a3e51882542e4420779)
 
-## 登录jwt
+
+### 小程序
+- [Node使用小程序模板消息](https://blog.csdn.net/rolan1993/article/details/78213145)
+- [微信小程序模板消息定时推送，只需要简单三步就好](https://www.jianshu.com/p/2910d18a8e9b)
+- [微信小程序nodejs发送模板消息 多次发送](https://www.jianshu.com/p/5955cfff6532)
+
+
+
+### redis
+- [Node.js Redis 的使用](https://blog.csdn.net/q282176713/article/details/80580886)
+- [redis在nodejs中的应用](https://segmentfault.com/a/1190000014681783#articleHeader0)
+- [实战学习NodeJS建站（5）—nodejs 访问 redis](https://blog.csdn.net/qidong7/article/details/52888211)
+
+### 登录jwt
 - [koa 实现 jwt 认证](https://juejin.im/post/5a1ae1cdf265da431d3c6337)
 
 ### 数据库

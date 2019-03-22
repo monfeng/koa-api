@@ -1,4 +1,4 @@
-const Student_col = require('../models/student');
+const Student_col = require('../models/student')
 
 
 /**
@@ -10,8 +10,8 @@ const addStudent = async (ctx) => {
   const {name, birthday, sex, age, contacts, phone, province, city, region, address, teacherId, status} = body
   
   try {
-    await Student_col.create({name, birthday, sex, age, contacts, phone, province, city, region, address, teacherId, status});
-    ctx.status = 200;
+    await Student_col.create({name, birthday, sex, age, contacts, phone, province, city, region, address, teacherId, status})
+    ctx.status = 200
     ctx.body = {
       code: 1,
       msg: 'insert success',

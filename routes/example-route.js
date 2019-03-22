@@ -3,8 +3,8 @@ const router = new Router()
 const exampleController = require('../controllers/exapmle-controller')
 
 
-router.get('/main', exampleController.main)
-router.get('/about', exampleController.about)
+router.get('/get', exampleController.get)
+router.post('/post', exampleController.post)
 
 // 错误的路由
 router.get('/err', exampleController.err)

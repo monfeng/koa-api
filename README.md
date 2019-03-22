@@ -28,6 +28,12 @@
 ### 数据库
 - [mongoose中文文档](https://cn.mongoosedoc.top/docs/cnhome.html)
 
+### 服务器的搭建
+- [史上最详细阿里云服务器搭建及域名申请攻略](https://www.jianshu.com/p/246b5562bbcc)
+
+### eslint
+- [解决eslint在async函数报错](https://stackoverflow.com/questions/43933907/eslint-parsing-error-parsing-error-unexpected-token)
+
 ### 需求
 需求：
 // 登录、注册

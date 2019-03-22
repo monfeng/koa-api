@@ -61,7 +61,7 @@ const addStudent = async (ctx) => {
     ctx.body = {
       code: 0,
       msg: error,
-      desc: '查询学员失败'
+      desc: '查询学员列表失败'
     }
   }
  }
@@ -111,7 +111,7 @@ const updateStudent = async (ctx) => {
     ctx.status = 200;
     ctx.body = {
       code: 1,
-      msg: 'find success',
+      msg: 'update success',
       data: students,
     }
   } catch (error) {
@@ -119,7 +119,36 @@ const updateStudent = async (ctx) => {
     ctx.body = {
       code: 0,
       msg: error,
-      desc: '查询学员失败'
+      desc: '修改学员失败'
+    }
+  }
+ }
+
+
+/**
+ * 删除学员
+ * sort：如果条件找到多个文档，请设置排序顺序以选择要更新的文档
+  select：设置要返回的文档字段
+  rawResult：如果为true，则返回MongoDB驱动程序的原始结果
+  strict：覆盖此更新的架构严格模式选项
+ */
+
+const delStudent = async (ctx) => {
+  const {id} = ctx.params
+  try {
+    const students = await Student_col.findByIdAndRemove(id) // executes;
+    ctx.status = 200;
+    ctx.body = {
+      code: 1,
+      msg: 'delete success',
+      data: students,
+    }
+  } catch (error) {
+    ctx.status = 400
+    ctx.body = {
+      code: 0,
+      msg: error,
+      desc: '删除学员失败'
     }
   }
  }
@@ -128,5 +157,6 @@ module.exports = {
   addStudent,
   findStudentList,
   findStudent,
-  updateStudent
+  updateStudent,
+  delStudent
 }

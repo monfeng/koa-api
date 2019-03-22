@@ -1,9 +1,9 @@
 
 
 const mongoose = require('mongoose')
-// 姓名，生日，性别：男/女=》1/2，年龄，紧急联系人，手机，地址，openid， 选择老师，状态：在读，毕业 1/2 备注：‘’, 创建时间，更新时间
+// 姓名，生日，性别：男/女=》1/2，年龄，手机， 地址，状态：在职，离职 1/2，备注：‘’, 创建时间，更新时间
 const Schema = mongoose.Schema
-const userSchema = new Schema({
+const teacherSchema = new Schema({
   name: {
     type: String,
     required: true
@@ -19,10 +19,6 @@ const userSchema = new Schema({
   },
   age: {
     type: Number,
-    required: true
-  },
-  contacts: {
-    type: String,
     required: true
   },
   phone: {
@@ -44,11 +40,7 @@ const userSchema = new Schema({
     type: String,
     default: ''
   },
-  openId: {
-    type: String,
-    default: ''
-  },
-  teacherId: {
+  desc: {
     type: String,
     default: ''
   },
@@ -56,10 +48,6 @@ const userSchema = new Schema({
     type: Number,
     default: 1,
     required: true
-  },
-  desc: {
-    type: String,
-    default: ''
   },
   createDate: {
     type: Date,
@@ -69,8 +57,8 @@ const userSchema = new Schema({
     type: Date,
     default: Date.now
   }
-}, { collection: 'student', versionKey: false})
+}, { collection: 'teacher', versionKey: false})
 
 
 
-module.exports = mongoose.model('student', userSchema)
+module.exports = mongoose.model('teacher', teacherSchema)

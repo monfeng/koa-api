@@ -10,6 +10,6 @@
     "region": "",
     "address": "",
     "teacherId": "teacherId",
-    "status": 1
-
+    "status": 1,
+    "desc": "描述"
 }

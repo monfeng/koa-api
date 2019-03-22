@@ -1,0 +1,13 @@
+{
+  "name": "老师",
+  "birthday": "2000-12-12",
+  "sex": 1,
+  "age": 19,
+  "phone": "11111",
+  "province": "省",
+  "city": "市",
+  "region": "",
+  "address": "",
+  "status": 1,
+  "desc": "添加描述"
+}

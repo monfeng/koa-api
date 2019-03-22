@@ -1,28 +1,28 @@
-const Student_col = require('../models/student')
+const Teacher_col = require('../models/teacher')
 
 
 /**
- * 添加新的学员
+ * 添加新的老师
  * @param {*} ctx 
  */
-const addStudent = async (ctx) => {
+const addTeacher = async (ctx) => {
   const body = ctx.request.body
-  const {name, birthday, sex, age, contacts, phone, province, city, region, address, teacherId, status} = body
+  // const {name, birthday, sex, age, contacts, phone, province, city, region, address, status} = body
   
   try {
-    await Student_col.create({name, birthday, sex, age, contacts, phone, province, city, region, address, teacherId, status})
+    await Teacher_col.create(body)
     ctx.status = 200
     ctx.body = {
       code: 1,
       msg: 'insert success',
-      desc: '添加学员成功'
+      desc: '添加老师成功'
     }
   } catch (error) {
     ctx.status = 400
     ctx.body = {
       code: 0,
       msg: error,
-      desc: '添加学员失败'
+      desc: '添加老师失败'
     }
   }
 }
@@ -39,23 +39,22 @@ const addStudent = async (ctx) => {
 // }
 
 /**
- * 获取学员的列表
+ * 获取老师的列表
  */
 
-const findStudentList = async (ctx) => {
+const findTeacherList = async (ctx) => {
   const body = ctx.request.body
   const {page = 1, limit = 10, query = {}} = body
 
   try {
-    // const students = await Student_col.find(query, { _id: 1 }).skip(page).limit(limit)
     const offset = (page - 1) * limit
-    const students = await Student_col.find(query).skip(offset).limit(limit)
-    const count = await Student_col.estimatedDocumentCount()
+    const teacher = await Teacher_col.find(query).skip(offset).limit(limit)
+    const count = await Teacher_col.estimatedDocumentCount()
     ctx.status = 200
     ctx.body = {
       code: 1,
       msg: 'find success',
-      data: students,
+      data: teacher,
       count
     }
   } catch (error) {
@@ -63,38 +62,38 @@ const findStudentList = async (ctx) => {
     ctx.body = {
       code: 0,
       msg: error,
-      desc: '查询学员列表失败'
+      desc: '查询老师列表失败'
     }
   }
 }
 
 /**
- * 获取学员的详情
+ * 获取老师的详情
  */
 
-const findStudent = async (ctx) => {
+const findTeacher = async (ctx) => {
   const {id} = ctx.params
   try {
-    const students = await Student_col.findById(id)
+    const teacher = await Teacher_col.findById(id)
     ctx.status = 200
     ctx.body = {
       code: 1,
       msg: 'find success',
-      data: students,
+      data: teacher,
     }
   } catch (error) {
     ctx.status = 400
     ctx.body = {
       code: 0,
       msg: error,
-      desc: '查询学员失败'
+      desc: '查询老师失败'
     }
   }
 }
 
 
 /**
- * 更改学员的信息
+ * 更改老师的信息
  * new：bool - true返回修改后的文档而不是原始文档。默认为false
   upsert：bool - 如果对象不存在，则创建该对象。默认为false。
   runValidators：如果为true，则在此命令上运行update validators。更新验证程序根据模型的架构验证更新操作。
@@ -105,61 +104,61 @@ const findStudent = async (ctx) => {
   strict：覆盖此更新的架构严格模式选项
  */
 
-const updateStudent = async (ctx) => {
+const updateTeacher = async (ctx) => {
   const {id} = ctx.params
   const body = ctx.request.body
-  body.updateDate = new Date()
+  body.updateDate = new Date
   try {
-    const students = await Student_col.findOneAndReplace({_id: id}, { $set: body})
+    const teacher = await Teacher_col.findOneAndReplace({_id: id}, { $set: body})
     ctx.status = 200
     ctx.body = {
       code: 1,
       msg: 'update success',
-      data: students,
+      data: teacher,
     }
   } catch (error) {
     ctx.status = 400
     ctx.body = {
       code: 0,
       msg: error,
-      desc: '修改学员失败'
+      desc: '修改老师失败'
     }
   }
 }
 
 
 /**
- * 删除学员
+ * 删除老师
  * sort：如果条件找到多个文档，请设置排序顺序以选择要更新的文档
   select：设置要返回的文档字段
   rawResult：如果为true，则返回MongoDB驱动程序的原始结果
   strict：覆盖此更新的架构严格模式选项
  */
 
-const delStudent = async (ctx) => {
+const delTeacher = async (ctx) => {
   const {id} = ctx.params
   try {
-    const students = await Student_col.findOneAndDelete({_id: id}) // executes;
+    const teacher = await Teacher_col.findOneAndDelete({_id: id}) // executes;
     ctx.status = 200
     ctx.body = {
       code: 1,
       msg: 'delete success',
-      data: students,
+      data: teacher,
     }
   } catch (error) {
     ctx.status = 400
     ctx.body = {
       code: 0,
       msg: error,
-      desc: '删除学员失败'
+      desc: '删除老师失败'
     }
   }
 }
  
 module.exports = {
-  addStudent,
-  findStudentList,
-  findStudent,
-  updateStudent,
-  delStudent
+  addTeacher,
+  findTeacherList,
+  findTeacher,
+  updateTeacher,
+  delTeacher
 }

@@ -1,0 +1,15 @@
+{
+    "name": "学生",
+    "birthday": "2000-12-12",
+    "sex": 1,
+    "age": 19,
+    "contacts": "爸爸",
+    "phone": "11111",
+    "province": "省",
+    "city": "市",
+    "region": "",
+    "address": "",
+    "teacherId": "teacherId",
+    "status": 1
+
+}

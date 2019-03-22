@@ -7,6 +7,7 @@ const koaCors = require('./middleware/cors')
 const example_router = require('./routes/example-route')
 const auth_router = require('./routes/auth-route')
 const wechat_router = require('./routes/wechat')
+const student_router = require('./routes/student-route')
 
 const app = new Koa()
 
@@ -77,6 +78,7 @@ app.use(bodyParser({
 app.use(example_router.routes()).use(example_router.allowedMethods())
 app.use(auth_router.routes()).use(auth_router.allowedMethods())
 app.use(wechat_router.routes()).use(wechat_router.allowedMethods())
+app.use(student_router.routes()).use(student_router.allowedMethods())
 
 app.listen(config.port, () => {
   console.log('服务器成功启动')

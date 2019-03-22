@@ -18,6 +18,7 @@
 ### redis
 - [Node.js Redis 的使用](https://blog.csdn.net/q282176713/article/details/80580886)
 - [redis在nodejs中的应用](https://segmentfault.com/a/1190000014681783#articleHeader0)
+- [在Node.js应用中读写Redis数据库的简单方法](https://blog.csdn.net/luyaran/article/details/55251592)
 - [实战学习NodeJS建站（5）—nodejs 访问 redis](https://blog.csdn.net/qidong7/article/details/52888211)
 
 ### 登录jwt

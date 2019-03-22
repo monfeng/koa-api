@@ -20,6 +20,7 @@
 - [redis在nodejs中的应用](https://segmentfault.com/a/1190000014681783#articleHeader0)
 - [在Node.js应用中读写Redis数据库的简单方法](https://blog.csdn.net/luyaran/article/details/55251592)
 - [实战学习NodeJS建站（5）—nodejs 访问 redis](https://blog.csdn.net/qidong7/article/details/52888211)
+- [Linux(CentOS)下安装Redis(redis-4.0.1)](https://blog.csdn.net/diweikang/article/details/78784631)
 
 ### 登录jwt
 - [koa 实现 jwt 认证](https://juejin.im/post/5a1ae1cdf265da431d3c6337)

@@ -1,0 +1,10 @@
+{
+    "name": "学生家长",
+    "num": 3,
+    "studentId": "studentId",
+    "type": 1,
+    "classTypes": 1,
+    "amount": 100,
+    "status": 1,
+    "desc": "添加学时"
+}

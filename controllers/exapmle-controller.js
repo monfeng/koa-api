@@ -1,8 +1,8 @@
-// const User_col = require('../models/student')
+const getWechat = require('../utils/wechat-token')
 
-const get = ctx => {
-  console.log(ctx.query)
-  ctx.body = '666666'
+const get = async ctx => {
+  const result = await getWechat()
+  ctx.body = result
 }
 
 const post =  ctx => {

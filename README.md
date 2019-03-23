@@ -27,6 +27,7 @@
 
 ### 数据库
 - [mongoose中文文档](https://cn.mongoosedoc.top/docs/cnhome.html)
+- [mongodb增删查改文档](https://docs.mongodb.com/manual/reference/method/db.collection.update/)
 
 ### 服务器的搭建
 - [史上最详细阿里云服务器搭建及域名申请攻略](https://www.jianshu.com/p/246b5562bbcc)

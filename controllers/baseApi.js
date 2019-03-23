@@ -8,10 +8,11 @@ const Add = async (ctx, Document_Model) => {
   const body = ctx.request.body
   
   try {
-    await Document_Model.create(body)
+    const data = await Document_Model.create(body)
     ctx.status = 200
     ctx.body = {
       code: 1,
+      data,
       msg: 'insert success',
       desc: '添加成功'
     }
@@ -97,14 +98,15 @@ const Detail = async (ctx, Document_Model) => {
 /**
  * 更改的信息
  * @param {*} ctx 
- * new：bool - true返回修改后的文档而不是原始文档。默认为false
-  upsert：bool - 如果对象不存在，则创建该对象。默认为false。
-  runValidators：如果为true，则在此命令上运行update validators。更新验证程序根据模型的架构验证更新操作。
-  setDefaultsOnInsert：如果这upsert是真的，如果创建了新文档，mongoose将应用模型模式中指定的默认值。此选项仅适用于MongoDB> = 2.4，因为它依赖于MongoDB的$setOnInsert运算符。
-  sort：如果条件找到多个文档，请设置排序顺序以选择要更新的文档
-  select：设置要返回的文档字段
-  rawResult：如果为true，则返回MongoDB驱动程序的原始结果
-  strict：覆盖此更新的架构严格模式选项
+ *  
+    safe （布尔值）安全模式（默认为模式中设置的值（true））
+    upsert （boolean）是否创建doc，如果它不匹配（false）
+    multi （布尔值）是否应更新多个文档（false）
+    runValidators：如果为true，则在此命令上运行update validators。更新验证程序根据模型的架构验证更新操作。
+    setDefaultsOnInsert：如果这upsert是真的，如果创建了新文档，mongoose将应用模型模式中指定的默认值。此选项仅适用于MongoDB> = 2.4，因为它依赖于MongoDB的$setOnInsert运算符。
+    strict（布尔值）覆盖strict此更新的选项
+    overwrite （布尔值）禁用仅更新模式，允许您覆盖doc（false）
+     
  */
 
 const Update = async (ctx, Document_Model) => {
@@ -112,7 +114,10 @@ const Update = async (ctx, Document_Model) => {
   const body = ctx.request.body
   body.updateDate = new Date
   try {
-    const data = await Document_Model.findOneAndReplace({_id: id}, { $set: body})
+    // const data = await Document_Model.findOneAndReplace({_id: id}, { $set: body}) // 修改已经删除的不会报错返回null，不存在的会报错
+    const data = await Document_Model.update({_id: id}, { $set: body}, {upsert: false, multi: false})
+    // 不存在的：{"n": 0,"nModified": 0,"ok": 1}
+    // 存在的：{"n": 1,"nModified": 1,"ok": 1}
     ctx.status = 200
     ctx.body = {
       code: 1,

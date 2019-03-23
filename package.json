@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "node index.js"
   },
   "keywords": [],
   "author": "",
@@ -13,10 +13,7 @@
     "jsonwebtoken": "^8.5.0",
     "koa": "^2.7.0",
     "koa-bodyparser": "^4.2.1",
-    "koa-jwt": "^3.5.1",
-    "koa-log4": "^2.3.2",
     "koa-router": "^7.4.0",
-    "koa2-cors": "^2.0.6",
     "log4": "^3.1.0",
     "mongoose": "^5.4.17",
     "raw-body": "^2.3.3",

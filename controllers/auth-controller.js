@@ -71,7 +71,7 @@ const login = async (ctx) => {
  */
 const register = async (ctx) => {
   const body = ctx.request.body
-  const {email, password, mobile} = body
+  const {email, password, mobile, name} = body
   ctx.status = 200
   if (!email || !password || !mobile) {
     ctx.status = 401
@@ -103,7 +103,7 @@ const register = async (ctx) => {
 
   // 加密密码
   const hash = await passwordUtil.encrypt(password)
-  await Auth_col.create({account: email, password: hash, userId, mobile})
+  await Auth_col.create({account: email, password: hash, userId, mobile, name})
   ctx.body = {
     code: 1,
     msg: 'insert success',

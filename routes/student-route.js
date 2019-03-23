@@ -2,11 +2,10 @@ const Router = require('koa-router')
 const router = new Router({prefix: '/student'})
 const Student_col = require('../models/student')
 const baseApi = require('../controllers/baseApi')
+const Student_Controller = require('../controllers/student-controller')
 
 
-router.post('/add', async (ctx) => {
-  await baseApi.Add(ctx, Student_col)
-})
+router.post('/add', Student_Controller.Add)
 router.post('/list', async (ctx) => {
   await baseApi.List(ctx, Student_col)
 })

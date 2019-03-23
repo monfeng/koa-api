@@ -11,6 +11,7 @@
 // 微信配置是get请求，完成一次后，以后的东西都发到对于的post里面去
 
 const crypto = require('crypto') //引入加密模块
+const wechatApi = require('../api/wechat')
 const config = require('../config/wechat') //引入配置文件
 const getRawBody = require('raw-body')
 const parseXML = require('../utils/xml')
@@ -65,7 +66,16 @@ const handleMsg = async ctx => {
   </xml>`)
 }
 
+
+async function getOpenId (ctx) {
+  // const {code} = ctx.query //微信回调这个接口后会把code参数带过来
+  const {code} = ctx.request.body
+  const body = await wechatApi.getOpenId(code) //把code传入getOpenId方法
+  ctx.body = body
+}
+
 module.exports = {
   sign,
-  handleMsg
+  handleMsg,
+  getOpenId
 }

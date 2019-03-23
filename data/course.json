@@ -1,0 +1,10 @@
+{
+    "name": "学生的课程",
+    "teacherId": "teacherId",
+    "status": 1,
+    "day": 1,
+    "time": 1,
+    "startDate": 1,
+    "endDate": 1,
+    "desc": "课程的简介"
+}

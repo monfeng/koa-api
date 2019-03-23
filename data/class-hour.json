@@ -6,5 +6,11 @@
     "classTypes": 1,
     "amount": 100,
     "status": 1,
+    "course": {
+        "id": "课程id",
+        "name": "课程名字",
+        "teacherId": "teacherId",
+        "teacherName": "teacherName"
+    },
     "desc": "添加学时"
 }

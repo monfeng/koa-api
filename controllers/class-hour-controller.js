@@ -13,8 +13,8 @@ const Add = async (ctx) => {
     // $inc在原基础上更改：https://docs.mongodb.com/manual/reference/operator/update/inc/#up._S_inchttps://docs.mongodb.com/manual/reference/operator/update/inc/#up._S_inc
     
     // 更新学时统计表
-    const {type, num} = body
-    const query = type === 1 ? {$inc: { num }} : {$inc: { used: num }}
+    const {type, num, amount = 0} = body
+    const query = type === 1 ? {$inc: { num, amount }} : {$inc: { used: num }}
 
     const update = await StudentHour_col.update({studentId: body.studentId}, query, {upsert: false, multi: false})
 

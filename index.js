@@ -12,6 +12,7 @@ const template_router = require('./routes/template')
 const teacher_router = require('./routes/teacher-route')
 const course_router = require('./routes/course-route')
 const classHour_router = require('./routes/class-hour-route')
+const studentHour_router = require('./routes/student-hour-route')
 
 
 const app = new Koa()
@@ -89,6 +90,7 @@ app.use(teacher_router.routes()).use(teacher_router.allowedMethods())
 
 app.use(course_router.routes()).use(course_router.allowedMethods())
 app.use(classHour_router.routes()).use(classHour_router.allowedMethods())
+app.use(studentHour_router.routes()).use(studentHour_router.allowedMethods())
 
 app.listen(config.port, () => {
   console.log('服务器成功启动')

@@ -1,8 +1,8 @@
-const getWechat = require('../utils/wechat-token')
+// const getWechat = require('../utils/wechat-token')
 
 const get = async ctx => {
-  const result = await getWechat()
-  ctx.body = result
+  // const result = await getWechat()
+  ctx.body = '7777'
 }
 
 const post =  ctx => {

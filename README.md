@@ -35,6 +35,10 @@
 ### eslint
 - [解决eslint在async函数报错](https://stackoverflow.com/questions/43933907/eslint-parsing-error-parsing-error-unexpected-token)
 
+### nginx
+- [nginx 之 proxy_pass详解](https://blog.csdn.net/zhongzh86/article/details/70173174/)
+- [nginx配置之proxy_pass](https://blog.csdn.net/fwk19840301/article/details/80675410)
+
 ### 需求
 需求：
 // 登录、注册

@@ -7,9 +7,9 @@ const setToken = require('../utils/jwt-token')
 // 登录
 const login = async (ctx) => {
   const body = ctx.request.body
-  const {email, password} = body
+  const {account, password} = body
   ctx.status = 200
-  if (!email || !password) {
+  if (!account || !password) {
     ctx.status = 401
     ctx.body = {
       code: 0,
@@ -22,7 +22,7 @@ const login = async (ctx) => {
 
   // 获取用户的 userId和密码，找不到为null
   const user = await Auth_col.findOne({
-    account: email
+    account: account
   })
 
   if (!user) {
@@ -71,9 +71,9 @@ const login = async (ctx) => {
  */
 const register = async (ctx) => {
   const body = ctx.request.body
-  const {email, password, mobile, name} = body
+  const {account, password, mobile, name} = body
   ctx.status = 200
-  if (!email || !password || !mobile) {
+  if (!account || !password || !mobile) {
     ctx.status = 401
     ctx.body = {
       code: 0,
@@ -86,7 +86,7 @@ const register = async (ctx) => {
 
   // 获取用户的 userId
   const user = await Auth_col.findOne({
-    account: email
+    account: account
   })
   if (user) {
     ctx.status = 401
@@ -103,7 +103,7 @@ const register = async (ctx) => {
 
   // 加密密码
   const hash = await passwordUtil.encrypt(password)
-  await Auth_col.create({account: email, password: hash, userId, mobile, name})
+  await Auth_col.create({account: account, password: hash, userId, mobile, name})
   ctx.body = {
     code: 1,
     msg: 'insert success',

@@ -10,7 +10,7 @@ const login = async (ctx) => {
   const {account, password} = body
   ctx.status = 200
   if (!account || !password) {
-    ctx.status = 401
+    ctx.status = 403
     ctx.body = {
       code: 0,
       msg: 'parameter error！！name or password',
@@ -26,7 +26,7 @@ const login = async (ctx) => {
   })
 
   if (!user) {
-    ctx.status = 200
+    ctx.status = 403
     ctx.body = {
       code: 1,
       msg: 'account is not exit!',
@@ -56,6 +56,8 @@ const login = async (ctx) => {
     }
     return
   }
+
+  ctx.status = 403
 
   ctx.body = {
     code: 0,

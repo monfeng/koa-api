@@ -1,5 +1,5 @@
 const Router = require('koa-router')
-const router = new Router({prefix: '/student'})
+const router = new Router({prefix: '/v1/student'})
 const Student_col = require('../models/student')
 const baseApi = require('../controllers/baseApi')
 const Student_Controller = require('../controllers/student-controller')

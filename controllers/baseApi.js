@@ -45,12 +45,27 @@ const Add = async (ctx, Document_Model) => {
 
 const List = async (ctx, Document_Model) => {
   const body = ctx.request.body
-  const {page = 1, limit = 10, query = {}, sort = {}} = body
+  let {page = 1, limit = 10, query = {}, sort = {}, like = {}} = body
+
+  const keys = Reflect.ownKeys(like)
+  if (keys.length) {
+    const likeKeyVal = {}
+    for (let key of keys) {
+      if (!like[key]) continue
+      likeKeyVal[key] = new RegExp(like[key])
+    }
+    query = {
+      ...query,
+      ...likeKeyVal
+    }
+  }
+
+  console.log(query)
 
   try {
     const offset = (page - 1) * limit
     const data = await Document_Model.find(query).sort(sort).skip(offset).limit(limit)
-    const count = await Document_Model.estimatedDocumentCount()
+    const count = await Document_Model.estimatedDocumentCount(query)
     ctx.status = 200
     ctx.body = {
       code: 1,

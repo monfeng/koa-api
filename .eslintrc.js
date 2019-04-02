@@ -8,7 +8,10 @@ module.exports = {
   extends: "eslint:recommended",
   parserOptions: {
     sourceType: "module",
-    "ecmaVersion": 8,
+    ecmaVersion: 8, // 允许async
+    ecmaFeatures: {
+      experimentalObjectRestSpread: true // 允许...
+    }
   },
   rules: {
     "linebreak-style": "off",

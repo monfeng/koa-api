@@ -76,7 +76,7 @@ const register = async (ctx) => {
   const {account, password, mobile, name} = body
   ctx.status = 200
   if (!account || !password || !mobile) {
-    ctx.status = 401
+    ctx.status = 403
     ctx.body = {
       code: 0,
       msg: 'parameter error！！name or password',
@@ -91,7 +91,7 @@ const register = async (ctx) => {
     account: account
   })
   if (user) {
-    ctx.status = 401
+    ctx.status = 403
     ctx.body = {
       code: 0,
       msg: 'account is exit!',

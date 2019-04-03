@@ -3,8 +3,8 @@ const Auth_col = require('../models/auth')
 
 // 获取用户的信息
 const fetchUserInfo = async (ctx) => {
-  const  id  = ctx.userId
-    
+  const id = ctx.userId
+
 
   // 获取用户的 userId的信息
   try {
@@ -22,14 +22,21 @@ const fetchUserInfo = async (ctx) => {
       return
     }
 
-    const { password, ...data } = user
-    console.log(password)
+    // "status": 1,
+    // "_id": "5ca04881fd926c3bf72e84a1",
+    // "account": "yangpu@qq.com",
+    // "password": "50905d7b2216bfeccb5b41016357176b",
+    // "userId": "5b265740-5371-11e9-9cf7-0f021316e3c6",
+    // "mobile": "13800013800",
+    // "name": "yangpu",
+
+    const { status, account, name, mobile, userId } = user
     ctx.status = 200
     ctx.body = {
       code: 1,
       msg: 'success',
       desc: '获取成功',
-      data
+      data: { status, account, name, mobile, userId }
     }
   } catch (error) {
     ctx.status = 403

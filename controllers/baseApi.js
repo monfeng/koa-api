@@ -65,7 +65,11 @@ const List = async (ctx, Document_Model) => {
   try {
     const offset = (page - 1) * limit
     const data = await Document_Model.find(query).sort(sort).skip(offset).limit(limit)
-    const count = await Document_Model.estimatedDocumentCount(query)
+    // const count = await Document_Model.aggregate([
+    //   { $match: query },
+    //   // { $sum: '$_id' }
+    // ])
+    const count = await Document_Model.find(query).countDocuments()
     ctx.status = 200
     ctx.body = {
       code: 1,

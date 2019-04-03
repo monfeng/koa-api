@@ -27,6 +27,7 @@
 
 ### 数据库
 - [mongoose中文文档](https://cn.mongoosedoc.top/docs/cnhome.html)
+- [MongoDB 一条数据输出一个字段不同的值的count值](https://blog.csdn.net/hwhaocool/article/details/81741919)
 - [mongodb增删查改文档](https://docs.mongodb.com/manual/reference/method/db.collection.update/)
 
 ### 服务器的搭建

@@ -1,8 +1,9 @@
 const Router = require('koa-router')
-const router = new Router({prefix: '/class-hour'})
 const ClassHour_col = require('../models/class-hour')
 const baseApi = require('../controllers/baseApi')
 const ClassHour_Controller = require('../controllers/class-hour-controller')
+const config = require('../config')
+const router = new Router({prefix: `${config.prefix}/class-hour`})
 
 
 router.post('/add', ClassHour_Controller.Add)

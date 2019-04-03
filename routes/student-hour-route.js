@@ -1,7 +1,8 @@
 const Router = require('koa-router')
-const router = new Router({prefix: '/student-hour'})
 const StudentHour_col = require('../models/student-hour')
 const baseApi = require('../controllers/baseApi')
+const config = require('../config')
+const router = new Router({prefix: `${config.prefix}/student-hour`})
 
 
 router.post('/list', async (ctx) => {

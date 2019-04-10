@@ -74,8 +74,10 @@ const List = async (ctx, Document_Model) => {
     ctx.body = {
       code: 1,
       msg: 'find success',
-      data: data,
-      count
+      data: {
+        list: data,
+        count
+      }
     }
   } catch (error) {
     console.log(error)

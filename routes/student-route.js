@@ -2,6 +2,7 @@ const Router = require('koa-router')
 const Student_col = require('../models/student')
 const baseApi = require('../controllers/baseApi')
 const Student_Controller = require('../controllers/student-controller')
+const Course_Controller = require('../controllers/course-controller')
 const config = require('../config')
 const router = new Router({prefix: `${config.prefix}/student`})
 
@@ -19,5 +20,7 @@ router.put('/:id', async (ctx) => {
 router.delete('/:id', async (ctx) => {
   await baseApi.Del(ctx, Student_col)
 })
+
+router.post('/batchCourse', Course_Controller.BatchCourses)
 
 module.exports = router

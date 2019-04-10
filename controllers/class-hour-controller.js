@@ -10,7 +10,8 @@ const Add = async (ctx) => {
   const body = ctx.request.body
   
   try {
-    // $inc在原基础上更改：https://docs.mongodb.com/manual/reference/operator/update/inc/#up._S_inchttps://docs.mongodb.com/manual/reference/operator/update/inc/#up._S_inc
+    // $inc在原基础上更改：https://docs.mongodb.com/manual/reference/operator/update/inc/#up._S_inc
+    // https://docs.mongodb.com/manual/reference/operator/update/inc/#up._S_inc
     
     // 更新学时统计表
     const {type, num, amount = 0} = body

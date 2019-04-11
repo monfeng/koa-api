@@ -63,7 +63,92 @@ const BatchCourses = async (ctx) => {
 }
 
 
+/**
+ * 增加信息
+ * @param {*} ctx 
+ */
+const fetchTeacher = async (ctx) => {
+
+  try {
+
+    // const data = await Course_col.aggregate([
+    //   { $project: { name: 1, tId: {
+    //     $toObjectId: '$teacherId' 
+    //   } }},
+    //   {
+    //     $lookup: {
+    //       from: 'teacher',
+    //       localField: 'tId',
+    //       foreignField: '_id',
+    //       as: 'teacherCol'
+    //     }
+    //   }
+    // ])
+
+
+    const data = await Course_col.aggregate([
+      {
+        $lookup:
+          {
+            from: 'teacher',
+            let: { tId: {$toObjectId: '$teacherId'} },
+            pipeline: [
+              { $match:
+                  { $expr: // 接受聚合表达式
+                    { $eq: [ '$_id',  '$$tId' ] }
+                  }
+              },
+              {
+                $project: {
+                  teacherName: '$name',
+                  _id: 0
+                }
+              },
+            ],
+            as: 'teacherMsg'
+          }
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: [ 
+              { $arrayElemAt: [ '$teacherMsg', 0 ] },  // 拿数组的第一位，变成一个object
+              '$$ROOT'  // 覆盖数组
+            ] 
+          } 
+        }
+      },
+      {
+        $project: {
+          teacherMsg: 0, // 去除teacherMsg
+        }
+      }
+    ])
+
+
+    // 更新课程表成功 : update.n更新的条数
+    ctx.status = 200
+    ctx.body = {
+      code: 1,
+      msg: 'update success',
+      data: data,
+      desc: '更新成功'
+    }
+
+
+  } catch (error) {
+    ctx.status = 400
+    ctx.body = {
+      code: 0,
+      msg: error,
+      desc: '更新失败'
+    }
+  }
+}
+
+
 
 module.exports = {
   BatchCourses,
+  fetchTeacher,
 }

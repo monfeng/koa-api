@@ -58,6 +58,10 @@ db.collection.aggregate(pipeline, options)
 
 对于要在管道阶段中使用的聚合表达式运算符，请参阅 [聚合管道运算符](https://docs.mongodb.com/manual/reference/operator/aggregation/)。
 
+```
+expression：聚合表达式
+```
+
 
 
 ## `db.aggregate()`
@@ -1080,7 +1084,7 @@ FROM inventory
 WHERE sku= orders.item);
 ```
 
-##### 使用`$lookup`与阵列
+##### 使用`$lookup`与数组
 
 如果您`localField`是一个数组，并且您希望将其中的元素与`foreignField`单个元素进行匹配，则您需要[`$unwind`](https://docs.mongodb.com/manual/reference/operator/aggregation/unwind/#pipe._S_unwind)将该数组作为聚合管道的一个阶段。
 

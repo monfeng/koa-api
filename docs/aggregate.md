@@ -71,7 +71,7 @@ db.collection.aggregate(pipeline, options)
 
 ## 聚合api
 
-### 1.$project（更改原有字段的输出，维度是_id，即每一条数据不变）
+### $project（更改原有字段的输出，维度是_id，即每一条数据不变）
 
 > 将包含请求字段的文档传递到管道中的下一个阶段。指定的字段可以是输入文档或新计算字段中的现有字段。
 
@@ -404,7 +404,7 @@ db.collection.aggregate( [ { $project: { myArray: [ "$x", "$y", "$someField" ] }
 { "_id" : ObjectId("55ad167f320c6be244eb3b95"), "myArray" : [ 1, 1, null ] }
 ```
 
-### 2.$out
+### $out
 
 > 获取聚合管道返回的文档并将它们写入指定的集合。该[`$out`](https://docs.mongodb.com/manual/reference/operator/aggregation/out/#pipe._S_out)操作者必须*在最后阶段*的管道。
 >
@@ -467,7 +467,7 @@ db.books.aggregate( [
 { "_id" : "Dante", "books" : [ "The Banquet", "Divine Comedy", "Eclogues" ] }
 ```
 
-### 3.$group（根据不同的字段进行统计，或者输出）
+### $group（根据不同的字段进行统计，或者输出）
 
 > 按一些指定的表达式对文档进行分组，并为每个不同的分组输出到下一个阶段的文档。输出文档包含一个`_id`按键包含不同组的字段。输出文档还可以包含存储由分组一些累加器表达式的值来计算字段 [`$group`](https://docs.mongodb.com/manual/reference/operator/aggregation/group/#pipe._S_group)的`_id`字段。[`$group`](https://docs.mongodb.com/manual/reference/operator/aggregation/group/#pipe._S_group)并*没有* 责令其输出文档。
 
@@ -783,6 +783,542 @@ db.inventory.aggregate( [
 { "_id" : 3, "item" : "IJK", "sizes" : "M" }
 { "_id" : 4, "item" : "LMN" }
 { "_id" : 5, "item" : "XYZ", "sizes" : null }
+```
+
+### `$match`
+
+> 过滤文档以仅将符合指定条件的文档传递到下一个管道阶段。
+
+该[`$match`](https://docs.mongodb.com/manual/reference/operator/aggregation/match/#pipe._S_match)阶段具有以下原型形式：
+
+```
+{ $match: { <query> } }
+```
+
+[`$match`](https://docs.mongodb.com/manual/reference/operator/aggregation/match/#pipe._S_match)获取指定查询条件的文档。查询语法与[读操作查询](https://docs.mongodb.com/manual/tutorial/query-documents/#read-operations-query-argument)语法相同; 即 [`$match`](https://docs.mongodb.com/manual/reference/operator/aggregation/match/#pipe._S_match)不接受[原始聚合表达式](https://docs.mongodb.com/manual/meta/aggregation-quick-reference/#aggregation-expressions)。相反，使用[`$expr`](https://docs.mongodb.com/manual/reference/operator/query/expr/#op._S_expr)查询表达式包含聚合表达式[`$match`](https://docs.mongodb.com/manual/reference/operator/aggregation/match/#pipe._S_match)。
+
+#### 行为
+
+##### Pipeline Optimization
+
+- 放置[`$match`](https://docs.mongodb.com/manual/reference/operator/aggregation/match/#pipe._S_match)在聚集早 [管道](https://docs.mongodb.com/manual/reference/glossary/#term-pipeline)越好。由于[`$match`](https://docs.mongodb.com/manual/reference/operator/aggregation/match/#pipe._S_match)限制了聚合管道中的文档总数，因此先前的[`$match`](https://docs.mongodb.com/manual/reference/operator/aggregation/match/#pipe._S_match)操作可以最大限度地减少管道的处理量。
+- 如果您[`$match`](https://docs.mongodb.com/manual/reference/operator/aggregation/match/#pipe._S_match)在管道的最开头放置一个，则查询可以利用其他任何[索引](https://docs.mongodb.com/manual/reference/glossary/#term-index)[`db.collection.find()`](https://docs.mongodb.com/manual/reference/method/db.collection.find/#db.collection.find) 或[索引](https://docs.mongodb.com/manual/reference/glossary/#term-index)[`db.collection.findOne()`](https://docs.mongodb.com/manual/reference/method/db.collection.findOne/#db.collection.findOne)。
+
+##### 限制
+
+该[`$match`](https://docs.mongodb.com/manual/reference/operator/aggregation/match/#pipe._S_match)查询语法等同于[读出操作查询](https://docs.mongodb.com/manual/tutorial/query-documents/#read-operations-query-argument)语法; 即 [`$match`](https://docs.mongodb.com/manual/reference/operator/aggregation/match/#pipe._S_match)不接受[原始聚合表达式](https://docs.mongodb.com/manual/meta/aggregation-quick-reference/#aggregation-expressions)。要包含聚合表达式[`$match`](https://docs.mongodb.com/manual/reference/operator/aggregation/match/#pipe._S_match)，请使用[`$expr`](https://docs.mongodb.com/manual/reference/operator/query/expr/#op._S_expr)查询表达式：
+
+```
+{ $match: { $expr: { <aggregation expression> } } }
+```
+
+- 不能使用[`$where`](https://docs.mongodb.com/manual/reference/operator/query/where/#op._S_where)在[`$match`](https://docs.mongodb.com/manual/reference/operator/aggregation/match/#pipe._S_match)查询作为聚合管道的一部分。
+
+- 您不能在 查询中使用[`$near`](https://docs.mongodb.com/manual/reference/operator/query/near/#op._S_near)或作为聚合管道的一部分。作为替代方案，您可以：[`$nearSphere`](https://docs.mongodb.com/manual/reference/operator/query/nearSphere/#op._S_nearSphere)[`$match`](https://docs.mongodb.com/manual/reference/operator/aggregation/match/#pipe._S_match)
+
+  - 使用[`$geoNear`](https://docs.mongodb.com/manual/reference/operator/aggregation/geoNear/#pipe._S_geoNear)舞台而不是[`$match`](https://docs.mongodb.com/manual/reference/operator/aggregation/match/#pipe._S_match)舞台。
+  - 使用[`$geoWithin`](https://docs.mongodb.com/manual/reference/operator/query/geoWithin/#op._S_geoWithin)查询运营商，[`$center`](https://docs.mongodb.com/manual/reference/operator/query/center/#op._S_center)或 [`$centerSphere`](https://docs.mongodb.com/manual/reference/operator/query/centerSphere/#op._S_centerSphere)在[`$match`](https://docs.mongodb.com/manual/reference/operator/aggregation/match/#pipe._S_match)阶段。
+
+- 要[`$text`](https://docs.mongodb.com/manual/reference/operator/query/text/#op._S_text)在[`$match`](https://docs.mongodb.com/manual/reference/operator/aggregation/match/#pipe._S_match)舞台上使用， [`$match`](https://docs.mongodb.com/manual/reference/operator/aggregation/match/#pipe._S_match)舞台必须是管道的第一阶段。
+
+  [视图](https://docs.mongodb.com/manual/core/views/)不支持文本搜索。
+
+
+
+#### 示例
+
+##### 平等匹配
+
+这些示例使用以articles下列文档命名的集合：
+
+```
+{ "_id" : ObjectId("512bc95fe835e68f199c8686"), "author" : "dave", "score" : 80, "views" : 100 }
+{ "_id" : ObjectId("512bc962e835e68f199c8687"), "author" : "dave", "score" : 85, "views" : 521 }
+{ "_id" : ObjectId("55f5a192d4bede9ac365b257"), "author" : "ahn", "score" : 60, "views" : 1000 }
+{ "_id" : ObjectId("55f5a192d4bede9ac365b258"), "author" : "li", "score" : 55, "views" : 5000 }
+{ "_id" : ObjectId("55f5a1d3d4bede9ac365b259"), "author" : "annT", "score" : 60, "views" : 50 }
+{ "_id" : ObjectId("55f5a1d3d4bede9ac365b25a"), "author" : "li", "score" : 94, "views" : 999 }
+{ "_id" : ObjectId("55f5a1d3d4bede9ac365b25b"), "author" : "ty", "score" : 95, "views" : 1000 }
+
+
+
+平等匹配
+以下操作用于$match执行简单的相等匹配：
+db.articles.aggregate(
+    [ { $match : { author : "dave" } } ]
+);
+
+
+将$match选择其中的文件author 字段等于dave，并聚集返回以下内容：
+{ "_id" : ObjectId("512bc95fe835e68f199c8686"), "author" : "dave", "score" : 80, "views" : 100 }
+{ "_id" : ObjectId("512bc962e835e68f199c8687"), "author" : "dave", "score" : 85, "views" : 521 }
+```
+
+##### 执行计数
+
+以下示例使用$match管道运算符选择要处理的文档 ，然后将结果通过$group管道传输给管道运算符以计算文档计数：
+
+```
+db.articles.aggregate( [
+  { $match: { $or: [ { score: { $gt: 70, $lt: 90 } }, { views: { $gte: 1000 } } ] } },
+  { $group: { _id: null, count: { $sum: 1 } } }
+] );
+
+
+在凝集管道，$match选择的文件，其中任一score大于70和小于90 或views大于或等于1000。然后将这些文件用管道输送$group到进行计数。聚合返回以下内容：
+
+{  “  _ id” ： null ， “count”  ： 5  }
+```
+
+### `$lookup`
+
+版本3.2中的新功能。
+
+> 对*同一* 数据库中的未整数集合执行左外连接，以从“已连接”集合中过滤文档以进行处理。对于每个输入文档，该[`$lookup`](https://docs.mongodb.com/manual/reference/operator/aggregation/lookup/#pipe._S_lookup)阶段添加一个新的数组字段，其元素是来自“已连接”集合的匹配文档。该[`$lookup`](https://docs.mongodb.com/manual/reference/operator/aggregation/lookup/#pipe._S_lookup)阶段通过这些重塑文件到下一阶段。
+
+#### 语法
+
+该$lookup阶段具有以下语法：
+
+##### 平等匹配
+
+要在输入文档中的字段与“已加入”集合的文档中的字段之间执行相等匹配，该 $lookup阶段具有以下语法：
+
+```
+{
+   $lookup:
+     {
+       from: <collection to join>,
+       localField: <field from the input documents>,
+       foreignField: <field from the documents of the "from" collection>,
+       as: <output array field>
+     }
+}
+```
+
+在[`$lookup`](https://docs.mongodb.com/manual/reference/operator/aggregation/lookup/#pipe._S_lookup)需要具有以下字段的文档：
+
+| 领域           | 描述                                                         |
+| -------------- | ------------------------------------------------------------ |
+| `from`         | 指定*同一*数据库中的集合以执行连接。该`from`集合无法分片。有关详细信息，请参阅[Sharded Collection Restrictions](https://docs.mongodb.com/manual/reference/operator/aggregation/lookup/#lookup-sharded-collections)。 |
+| `localField`   | 指定输入到[`$lookup`](https://docs.mongodb.com/manual/reference/operator/aggregation/lookup/#pipe._S_lookup)舞台的文档中的字段 。[`$lookup`](https://docs.mongodb.com/manual/reference/operator/aggregation/lookup/#pipe._S_lookup)执行上的平等匹配`localField`到`foreignField`从的文档`from` 集合。如果输入文档不包含该输入文档 `localField`，则[`$lookup`](https://docs.mongodb.com/manual/reference/operator/aggregation/lookup/#pipe._S_lookup)将该字段视为具有`null`用于匹配目的的值。注意如果您`localField`是一个数组，则可能需要[`$unwind`](https://docs.mongodb.com/manual/reference/operator/aggregation/unwind/#pipe._S_unwind)在管道中添加一个 阶段。否则，之间的平等条件`localField`，并 `foreignField`为。`foreignField: { $in: [localField.elem1, localField.elem2, ... ] }`请参阅此页面上的[示例](https://docs.mongodb.com/manual/reference/operator/aggregation/lookup/#unwind-example)。 |
+| `foreignField` | 指定`from` 集合中文档的字段。[`$lookup`](https://docs.mongodb.com/manual/reference/operator/aggregation/lookup/#pipe._S_lookup)执行上的平等匹配`foreignField`到`localField`从输入文件。如果`from`集合中的文档不包含`foreignField`，[`$lookup`](https://docs.mongodb.com/manual/reference/operator/aggregation/lookup/#pipe._S_lookup)则将值视为`null`匹配目的。 |
+| `as`           | 指定要添加到输入文档的新数组字段的名称。新数组字段包含`from`集合中的匹配文档。如果输入文档中已存在指定的名称，则会*覆盖*现有字段 。 |
+
+该操作将对应于以下伪SQL语句：
+
+```
+SELECT *, <output array field>
+FROM collection
+WHERE <output array field> IN (SELECT *
+                               FROM <collection to join>
+                               WHERE <foreignField>= <collection.localField>);
+```
+
+请参阅以下示例：
+
+- [使用$ lookup执行单一等式连接](https://docs.mongodb.com/manual/reference/operator/aggregation/lookup/#lookup-single-equality)
+- [对数组使用$ lookup](https://docs.mongodb.com/manual/reference/operator/aggregation/lookup/#unwind-example)
+- [对$ mergeObjects使用$ lookup](https://docs.mongodb.com/manual/reference/operator/aggregation/lookup/#lookup-mergeobjects)
+
+##### 加入条件和不相关的子查询
+
+版本3.6中的新功能。
+
+要在两个集合之间执行不相关的子查询以及允许除单个相等匹配之外的其他连接条件，该 [`$lookup`](https://docs.mongodb.com/manual/reference/operator/aggregation/lookup/#pipe._S_lookup)阶段具有以下语法：
+
+```
+{
+   $lookup:
+     {
+       from: <collection to join>,
+       let: { <var_1>: <expression>, …, <var_n>: <expression> },
+       pipeline: [ <pipeline to execute on the collection to join> ],
+       as: <output array field>
+     }
+}
+```
+
+在[`$lookup`](https://docs.mongodb.com/manual/reference/operator/aggregation/lookup/#pipe._S_lookup)需要具有以下字段的文档：
+
+| 领域       | 描述                                                         |
+| ---------- | ------------------------------------------------------------ |
+| `from`     | 指定*同一*数据库中的集合以执行连接。该`from`集合无法分片。有关详细信息，请参阅[Sharded Collection Restrictions](https://docs.mongodb.com/manual/reference/operator/aggregation/lookup/#lookup-sharded-collections)。 |
+| `let`      | 可选的。指定要在`pipeline`字段阶段中使用的变量。使用变量表达式从输入到[`$lookup`](https://docs.mongodb.com/manual/reference/operator/aggregation/lookup/#pipe._S_lookup)舞台的文档中访问字段。在`pipeline`不能直接访问输入文档字段。相反，首先定义输入文档字段的变量，然后引用中的阶段中的变量`pipeline`。要访问中的`let`变量`pipeline`，请使用 [`$expr`](https://docs.mongodb.com/manual/reference/operator/query/expr/#op._S_expr)运算符。注意该`let`变量是在该阶段访问 `pipeline`，包括额外的[`$lookup`](https://docs.mongodb.com/manual/reference/operator/aggregation/lookup/#pipe._S_lookup)嵌套的阶段`pipeline`。 |
+| `pipeline` | 指定要在已连接集合上运行的管道。该 `pipeline`决定从加入集合生成的文件。要返回所有文档，请指定一个空管道 `[]`。在`pipeline`不能直接访问输入文档字段。相反，首先定义输入文档字段的变量，然后引用中的阶段中的变量`pipeline`。要访问中的`let`变量`pipeline`，请使用 [`$expr`](https://docs.mongodb.com/manual/reference/operator/query/expr/#op._S_expr)运算符。注意该`let`变量是在该阶段访问 `pipeline`，包括额外的[`$lookup`](https://docs.mongodb.com/manual/reference/operator/aggregation/lookup/#pipe._S_lookup)嵌套的阶段`pipeline`。 |
+| `as`       | 指定要添加到输入文档的新数组字段的名称。新数组字段包含`from`集合中的匹配文档。如果输入文档中已存在指定的名称，则会*覆盖*现有字段 。 |
+
+该操作将对应于以下伪SQL语句：
+
+```
+SELECT *, <output array field>
+FROM collection
+WHERE <output array field> IN (SELECT <documents as determined from the pipeline>
+                               FROM <collection to join>
+                               WHERE <pipeline> );
+```
+
+请参阅以下示例：
+
+- [使用$ lookup指定多个连接条件](https://docs.mongodb.com/manual/reference/operator/aggregation/lookup/#lookup-multiple-joins)
+- [不相关的子查询](https://docs.mongodb.com/manual/reference/operator/aggregation/lookup/#lookup-uncorrelated-subuery)
+
+
+
+#### 考虑
+
+##### 视图和整理
+
+如果执行涉及多个视图的聚合（例如使用[`$lookup`](https://docs.mongodb.com/manual/reference/operator/aggregation/lookup/#pipe._S_lookup)或）[`$graphLookup`](https://docs.mongodb.com/manual/reference/operator/aggregation/graphLookup/#pipe._S_graphLookup)，则视图必须具有相同的[排序规则](https://docs.mongodb.com/manual/reference/collation/)。
+
+##### 分片收集限制
+
+在[`$lookup`](https://docs.mongodb.com/manual/reference/operator/aggregation/lookup/#pipe._S_lookup)阶段，`from`收集不能被 [分片](https://docs.mongodb.com/manual/sharding/)。但是，可以对运行该[`aggregate()`](https://docs.mongodb.com/manual/reference/method/db.collection.aggregate/#db.collection.aggregate)方法的集合 进行分片。也就是说，在以下内容中：
+
+```
+db.collection.aggregate([
+   { $lookup: { from: "fromCollection", ... } }
+])
+```
+
+- 该`collection`可以分片。
+- 在`fromCollection`不能分片。
+
+因此，要将分片集合与未分片集合连接，您可以在分片集合上运行聚合并查找未整理的集合; 例如：
+
+```
+db.shardedCollection.aggregate([
+   { $lookup: { from: "unshardedCollection", ... } }
+])
+```
+
+或者，或者要连接多个分片集合，请考虑：
+
+- 修改客户端应用程序以执行手动查找，而不是使用[`$lookup`](https://docs.mongodb.com/manual/reference/operator/aggregation/lookup/#pipe._S_lookup)聚合阶段。
+- 如果可能，使用[嵌入式数据模型](https://docs.mongodb.com/manual/core/data-model-design/#data-modeling-embedding)，无需加入集合。
+
+
+
+#### 示例
+
+##### 执行单个等式连接$lookup
+
+orders使用以下文档创建集合：
+
+```
+db.orders.insert([
+   { "_id" : 1, "item" : "almonds", "price" : 12, "quantity" : 2 },
+   { "_id" : 2, "item" : "pecans", "price" : 20, "quantity" : 1 },
+   { "_id" : 3  }
+])
+```
+
+`inventory`使用以下文档创建另一个集合：
+
+```
+db.inventory.insert([
+   { "_id" : 1, "sku" : "almonds", description: "product 1", "instock" : 120 },
+   { "_id" : 2, "sku" : "bread", description: "product 2", "instock" : 80 },
+   { "_id" : 3, "sku" : "cashews", description: "product 3", "instock" : 60 },
+   { "_id" : 4, "sku" : "pecans", description: "product 4", "instock" : 70 },
+   { "_id" : 5, "sku": null, description: "Incomplete" },
+   { "_id" : 6 }
+])
+```
+
+在下面的聚合操作`orders`系列外，从文件`orders`从文件 `inventory`使用的字段集合`item`从 `orders`收集和`sku`从外地`inventory` 收集：
+
+```
+db.orders.aggregate([
+   {
+     $lookup:
+       {
+         from: "inventory",
+         localField: "item",
+         foreignField: "sku",
+         as: "inventory_docs"
+       }
+  }
+])
+
+
+该操作返回以下文档：
+{
+   "_id" : 1,
+   "item" : "almonds",
+   "price" : 12,
+   "quantity" : 2,
+   "inventory_docs" : [
+      { "_id" : 1, "sku" : "almonds", "description" : "product 1", "instock" : 120 }
+   ]
+}
+{
+   "_id" : 2,
+   "item" : "pecans",
+   "price" : 20,
+   "quantity" : 1,
+   "inventory_docs" : [
+      { "_id" : 4, "sku" : "pecans", "description" : "product 4", "instock" : 70 }
+   ]
+}
+{
+   "_id" : 3,
+   "inventory_docs" : [
+      { "_id" : 5, "sku" : null, "description" : "Incomplete" },
+      { "_id" : 6 }
+   ]
+}
+```
+
+该操作将对应于以下伪SQL语句：
+
+```
+SELECT *, inventory_docs
+FROM orders
+WHERE inventory_docs IN (SELECT *
+FROM inventory
+WHERE sku= orders.item);
+```
+
+##### 使用`$lookup`与阵列
+
+如果您`localField`是一个数组，并且您希望将其中的元素与`foreignField`单个元素进行匹配，则您需要[`$unwind`](https://docs.mongodb.com/manual/reference/operator/aggregation/unwind/#pipe._S_unwind)将该数组作为聚合管道的一个阶段。
+
+考虑一个`orders`包含以下文档的集合：
+
+```
+{ "_id" : 1, "item" : "MON1003", "price" : 350, "quantity" : 2, "specs" :
+[ "27 inch", "Retina display", "1920x1080" ], "type" : "Monitor" }
+```
+
+另一个集合`inventory`包含以下文档：
+
+```
+{ "_id" : 1, "sku" : "MON1003", "type" : "Monitor", "instock" : 120,
+"size" : "27 inch", "resolution" : "1920x1080" }
+{ "_id" : 2, "sku" : "MON1012", "type" : "Monitor", "instock" : 85,
+"size" : "23 inch", "resolution" : "1280x800" }
+{ "_id" : 3, "sku" : "MON1031", "type" : "Monitor", "instock" : 60,
+"size" : "23 inch", "display_type" : "LED" }
+```
+
+以下聚合操作对`orders`集合中的文档执行连接，这些文档 将`specs` 数组的特定元素`size`与`inventory`集合中的字段进行匹配。
+
+```
+db.orders.aggregate([
+   {
+      $unwind: "$specs"
+   },
+   {
+      $lookup:
+         {
+            from: "inventory",
+            localField: "specs",
+            foreignField: "size",
+            as: "inventory_docs"
+        }
+   },
+   {
+      $match: { "inventory_docs": { $ne: [] } }
+   }
+])
+
+
+该操作返回以下文档：
+{
+   "_id" : 1,
+   "item" : "MON1003",
+   "price" : 350,
+   "quantity" : 2,
+   "specs" : "27 inch",
+   "type" : "Monitor",
+   "inventory_docs" : [
+      {
+         "_id" : 1,
+         "sku" : "MON1003",
+         "type" : "Monitor",
+         "instock" : 120,
+         "size" : "27 inch",
+         "resolution" : "1920x1080"
+      }
+   ]
+}
+```
+
+##### 使用`$lookup`与`$mergeObjects`
+
+在版本3.6中更改： MongoDB 3.6添加了[`$mergeObjects`](https://docs.mongodb.com/manual/reference/operator/aggregation/mergeObjects/#exp._S_mergeObjects)运算符以将多个文档合并到单个文档中
+
+`orders`使用以下文档创建集合：
+
+```
+db.orders.insert([
+   { "_id" : 1, "item" : "almonds", "price" : 12, "quantity" : 2 },
+   { "_id" : 2, "item" : "pecans", "price" : 20, "quantity" : 1 }
+])
+
+
+db.items.insert([
+  { "_id" : 1, "item" : "almonds", description: "almond clusters", "instock" : 120 },
+  { "_id" : 2, "item" : "bread", description: "raisin and nut bread", "instock" : 80 },
+  { "_id" : 3, "item" : "pecans", description: "candied pecans", "instock" : 60 }
+])
+```
+
+下面的操作首先使用[`$lookup`](https://docs.mongodb.com/manual/reference/operator/aggregation/lookup/#pipe._S_lookup)阶段加入由两个集合`item`的字段，然后使用 [`$mergeObjects`](https://docs.mongodb.com/manual/reference/operator/aggregation/mergeObjects/#exp._S_mergeObjects)在[`$replaceRoot`](https://docs.mongodb.com/manual/reference/operator/aggregation/replaceRoot/#pipe._S_replaceRoot)给加盟的文件从合并`items`和`orders`：
+
+```
+db.orders.aggregate([
+   {
+      $lookup: {
+         from: "items",
+         localField: "item",    // field in the orders collection
+         foreignField: "item",  // field in the items collection
+         as: "fromItems"
+      }
+   },
+   {
+      $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$fromItems", 0 ] }, "$$ROOT" ] } }
+   },
+   { $project: { fromItems: 0 } }
+])
+
+该操作返回以下文档：
+{ "_id" : 1, "item" : "almonds", "description" : "almond clusters", "instock" : 120, "price" : 12, "quantity" : 2 }
+{ "_id" : 2, "item" : "pecans", "description" : "candied pecans", "instock" : 60, "price" : 20, "quantity" : 1 }
+```
+
+
+
+##### 使用指定多个连接条件`$lookup`
+
+在版本3.6中更改： MongoDB 3.6添加了对在已加入集合上执行管道的支持，这允许指定多个连接条件以及不相关的子查询。
+
+```
+db.orders.insert([
+  { "_id" : 1, "item" : "almonds", "price" : 12, "ordered" : 2 },
+  { "_id" : 2, "item" : "pecans", "price" : 20, "ordered" : 1 },
+  { "_id" : 3, "item" : "cookies", "price" : 10, "ordered" : 60 }
+])
+
+
+db.warehouses.insert([
+  { "_id" : 1, "stock_item" : "almonds", warehouse: "A", "instock" : 120 },
+  { "_id" : 2, "stock_item" : "pecans", warehouse: "A", "instock" : 80 },
+  { "_id" : 3, "stock_item" : "almonds", warehouse: "B", "instock" : 60 },
+  { "_id" : 4, "stock_item" : "cookies", warehouse: "B", "instock" : 40 },
+  { "_id" : 5, "stock_item" : "cookies", warehouse: "A", "instock" : 80 }
+])
+
+
+
+```
+
+以下操作将`orders`集合与 `warehouse`项目集合以及库存中的数量是否足以覆盖订购数量：
+
+```
+db.orders.aggregate([
+   {
+      $lookup:
+         {
+           from: "warehouses",
+           let: { order_item: "$item", order_qty: "$ordered" },
+           pipeline: [
+              { $match:
+                 { $expr:
+                    { $and:
+                       [
+                         { $eq: [ "$stock_item",  "$$order_item" ] },
+                         { $gte: [ "$instock", "$$order_qty" ] }
+                       ]
+                    }
+                 }
+              },
+              { $project: { stock_item: 0, _id: 0 } }
+           ],
+           as: "stockdata"
+         }
+    }
+])
+
+
+该操作返回以下文档：
+{ "_id" : 1, "item" : "almonds", "price" : 12, "ordered" : 2,
+   "stockdata" : [ { "warehouse" : "A", "instock" : 120 }, { "warehouse" : "B", "instock" : 60 } ] }
+{ "_id" : 2, "item" : "pecans", "price" : 20, "ordered" : 1,
+   "stockdata" : [ { "warehouse" : "A", "instock" : 80 } ] }
+{ "_id" : 3, "item" : "cookies", "price" : 10, "ordered" : 60,
+   "stockdata" : [ { "warehouse" : "A", "instock" : 80 } ] }
+```
+
+该操作将对应于以下伪SQL语句：
+
+```
+SELECT *, stockdata
+FROM orders
+WHERE stockdata IN (SELECT warehouse, instock
+                    FROM warehouses
+                    WHERE stock_item= orders.item
+                    AND instock >= orders.ordered );
+```
+
+##### 不相关的子查询
+
+在版本3.6中更改： MongoDB 3.6添加了对在已加入集合上执行管道的支持，这允许指定多个连接条件以及不相关的子查询。
+
+`absences`使用以下文档创建集合：
+
+```
+db.absences.insert([
+   { "_id" : 1, "student" : "Ann Aardvark", sickdays: [ new Date ("2018-05-01"),new Date ("2018-08-23") ] },
+   { "_id" : 2, "student" : "Zoe Zebra", sickdays: [ new Date ("2018-02-01"),new Date ("2018-05-23") ] },
+])
+
+
+db.holidays.insert([
+   { "_id" : 1, year: 2018, name: "New Years", date: new Date("2018-01-01") },
+   { "_id" : 2, year: 2018, name: "Pi Day", date: new Date("2018-03-14") },
+   { "_id" : 3, year: 2018, name: "Ice Cream Day", date: new Date("2018-07-15") },
+   { "_id" : 4, year: 2017, name: "New Years", date: new Date("2017-01-01") },
+   { "_id" : 5, year: 2017, name: "Ice Cream Day", date: new Date("2017-07-16") }
+])
+```
+
+以下操作将`absences`集合与集合中的2018个假日信息结合在一起`holidays`：
+
+```
+db.absences.aggregate([
+   {
+      $lookup:
+         {
+           from: "holidays",
+           pipeline: [
+              { $match: { year: 2018 } },
+              { $project: { _id: 0, date: { name: "$name", date: "$date" } } },
+              { $replaceRoot: { newRoot: "$date" } }
+           ],
+           as: "holidays"
+         }
+    }
+])
+
+
+
+该操作返回以下内容：
+{ "_id" : 1, "student" : "Ann Aardvark", "sickdays" : [ ISODate("2018-05-01T00:00:00Z"), ISODate("2018-08-23T00:00:00Z") ],
+    "holidays" : [ { "name" : "New Years", "date" : ISODate("2018-01-01T00:00:00Z") }, { "name" : "Pi Day", "date" : ISODate("2018-03-14T00:00:00Z") }, { "name" : "Ice Cream Day", "date" : ISODate("2018-07-15T00:00:00Z") } ] }
+{ "_id" : 2, "student" : "Zoe Zebra", "sickdays" : [ ISODate("2018-02-01T00:00:00Z"), ISODate("2018-05-23T00:00:00Z") ],
+    "holidays" : [ { "name" : "New Years", "date" : ISODate("2018-01-01T00:00:00Z") }, { "name" : "Pi Day", "date" : ISODate("2018-03-14T00:00:00Z") }, { "name" : "Ice Cream Day", "date" : ISODate("2018-07-15T00:00:00Z") } ] }
+```
+
+该操作将对应于以下伪SQL语句：
+
+```
+SELECT *, holidays
+FROM absences
+WHERE holidays IN (SELECT name, date
+                    FROM holidays
+                    WHERE year = 2018);
 ```
 
 

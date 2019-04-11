@@ -50,7 +50,7 @@ const courseSchema = new Schema({
     type: Date,
     default: Date.now
   }
-}, { collection: 'course', versionKey: false})
+}, { collection: 'course', versionKey: false,  timestamps: { createdAt: 'created', updatedAt: 'updated' }} )
 
 
 

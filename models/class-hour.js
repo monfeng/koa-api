@@ -12,23 +12,14 @@ const ClassHour_col = new Schema({
     type: Number,
     required: true
   },
-  // course: {
-  //   type: Schema.Types.Mixed,
-  //   default: () => {
-  //     return {
-  //       name: '',
-  //       id: '',
-  //       teacherId: '',
-  //       teacherName: ''
-  //     }
-  //   } 
-  // },
   courseId: {
     type: String,
+    default: '',
     required: true
   },
   teacherId: {
     type: String,
+    default: '',
     required: true
   },
   studentId: {

@@ -15,12 +15,10 @@ const ClassHour_col = new Schema({
   courseId: {
     type: String,
     default: '',
-    required: true
   },
   teacherId: {
     type: String,
     default: '',
-    required: true
   },
   studentId: {
     type: String,

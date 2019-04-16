@@ -28,8 +28,9 @@ const VerifyToken = async(ctx, next) => {
     ctx.status = 401
     const body = {
       code: 0,
+      error,
       msg: 'TokenExpiredError' === error.name ? 'token expired' : 'invalid token',
-      desc: 'oken失效或者不合法，请重新登录页面'
+      desc: 'token失效或者不合法，请重新登录页面'
     }
     ctx.body = body
     // ctx.throw(403, 'token expired！')

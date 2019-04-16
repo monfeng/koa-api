@@ -1,0 +1,41 @@
+{
+    "collection": "course",
+    "aggregate": [
+        {
+            "$lookup":
+              {
+                "from": "teacher",
+                "let": { "tId": {"$toObjectId": "$teacherId"} },
+                "pipeline": [
+                  { "$match":
+                      { "$expr":
+                        { "$eq": [ "$_id",  "$$tId" ] }
+                      }
+                  },
+                  {
+                    "$project": {
+                      "teacherName": "$name",
+                      "_id": 0
+                    }
+                  }
+                ],
+                "as": "teacherMsg"
+              }
+          },
+          {
+            "$replaceRoot": {
+              "newRoot": {
+                "$mergeObjects": [ 
+                  { "$arrayElemAt": [ "$teacherMsg", 0 ] }, 
+                  "$$ROOT"
+                ] 
+              } 
+            }
+          },
+          {
+            "$project": {
+              "teacherMsg": 0
+            }
+          }
+    ]
+}

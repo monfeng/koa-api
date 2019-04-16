@@ -1,9 +1,10 @@
 const Router = require('koa-router')
 const router = new Router()
 const exampleController = require('../controllers/exapmle-controller')
+const common = require('../controllers/common')
 
 
-router.get('/get', exampleController.get)
+router.post('/common', common)
 router.post('/post', exampleController.post)
 
 // 错误的路由

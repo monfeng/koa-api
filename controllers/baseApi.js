@@ -133,7 +133,7 @@ const Detail = async (ctx, Document_Model) => {
 const Update = async (ctx, Document_Model) => {
   const {id} = ctx.params
   const body = ctx.request.body
-  body.updateDate = new Date
+  // body.updateDate = new Date
   try {
     // const data = await Document_Model.findOneAndReplace({_id: id}, { $set: body}) // 修改已经删除的不会报错返回null，不存在的会报错
     const data = await Document_Model.update({_id: id}, { $set: body}, {upsert: false, multi: false})

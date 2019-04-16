@@ -16,14 +16,6 @@ const wechatSchema = new Schema({
     type: Number,
     required: true
   },
-  createDate: {
-    type: Date,
-    default: Date.now
-  },
-  updateDate: {
-    type: Date,
-    default: Date.now
-  }
-}, { collection: 'wechat', versionKey: false})
+}, { collection: 'wechat', versionKey: false,  timestamps: { createdAt: 'createDate', updatedAt: 'updateDate' }})
 
 module.exports = mongoose.model('wechat', wechatSchema)

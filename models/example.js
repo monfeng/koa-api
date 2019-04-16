@@ -16,6 +16,6 @@ const exampleSchema = new Schema({
     type: String,
     required: true
   },
-}, { collection: 'example', versionKey: false})
+}, { collection: 'example', versionKey: false,  timestamps: { createdAt: 'createDate', updatedAt: 'updateDate' }})
 
 module.exports = mongoose.model('example', exampleSchema)

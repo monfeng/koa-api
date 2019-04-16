@@ -29,14 +29,6 @@ const authSchema = new Schema({
     default: 1,
     required: true
   },
-  createDate: {
-    type: Date,
-    default: Date.now
-  },
-  updateDate: {
-    type: Date,
-    default: Date.now
-  },
-}, { collection: 'auth', versionKey: false})
+}, { collection: 'auth', versionKey: false,  timestamps: { createdAt: 'createDate', updatedAt: 'updateDate' }})
 
 module.exports = mongoose.model('auth', authSchema)

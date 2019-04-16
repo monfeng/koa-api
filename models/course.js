@@ -41,16 +41,8 @@ const courseSchema = new Schema({
   endDate: {
     type: Number,
     default: 0
-  },
-  createDate: {
-    type: Date,
-    default: Date.now
-  },
-  updateDate: {
-    type: Date,
-    default: Date.now
   }
-}, { collection: 'course', versionKey: false,  timestamps: { createdAt: 'created', updatedAt: 'updated' }} )
+}, { collection: 'course', versionKey: false,  timestamps: { createdAt: 'createDate', updatedAt: 'updateDate' }} )
 
 
 

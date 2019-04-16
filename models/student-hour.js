@@ -20,15 +20,7 @@ const StudentHour_col = new Schema({
     type: Number,
     default: 0
   },
-  createDate: {
-    type: Date,
-    default: Date.now
-  },
-  updateDate: {
-    type: Date,
-    default: Date.now
-  }
-}, { collection: 'student-hour', versionKey: false})
+}, { collection: 'student-hour', versionKey: false,  timestamps: { createdAt: 'createDate', updatedAt: 'updateDate' }})
 
 
 

@@ -49,15 +49,7 @@ const teacherSchema = new Schema({
     default: 1,
     required: true
   },
-  createDate: {
-    type: Date,
-    default: Date.now
-  },
-  updateDate: {
-    type: Date,
-    default: Date.now
-  }
-}, { collection: 'teacher', versionKey: false})
+}, { collection: 'teacher', versionKey: false,  timestamps: { createdAt: 'createDate', updatedAt: 'updateDate' }})
 
 
 

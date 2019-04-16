@@ -61,15 +61,7 @@ const userSchema = new Schema({
     type: String,
     default: ''
   },
-  createDate: {
-    type: Date,
-    default: Date.now
-  },
-  updateDate: {
-    type: Date,
-    default: Date.now
-  }
-}, { collection: 'student', versionKey: false})
+}, { collection: 'student', versionKey: false,  timestamps: { createdAt: 'createDate', updatedAt: 'updateDate' }})
 
 
 

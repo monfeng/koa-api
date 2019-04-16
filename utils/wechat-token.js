@@ -7,7 +7,7 @@ async function getformWechat (data) {
     const {access_token, expires_in} = await wechatApi.getAccessToken()
     await Wechat_col.create({access_token, expires_in})
     console.log('从微信拿的，初始化数据库')
-    return {access_token, expires_in, updateDate: new Date(), msg: '从微信拿的，初始化数据库'}
+    return {access_token, expires_in, msg: '从微信拿的，初始化数据库'}
   } else {
     return 'next'
   }
@@ -21,7 +21,7 @@ async function updateWechatToken (data) {
   const expires = currentDate - updateDate
   if (expires > updateDate.expires_in * 1000 ) {
     const {access_token, expires_in} = await wechatApi.getAccessToken()
-    const params = {access_token, expires_in, updateDate: now}
+    const params = {access_token, expires_in}
     await Wechat_col.update({name: 'wechat_token'}, { $set: params}, {upsert: false, multi: false})
     console.log('从微信更新到数据库里面')
     return {access_token, expires_in, updateDate: now, meg: '从微信更新到数据库里面'}

@@ -95,10 +95,12 @@ const List = async (ctx, Document_Model) => {
  * 获取的详情
  */
 
-const Detail = async (ctx, Document_Model) => {
+const Detail = async (ctx, Document_Model, props = '_id') => {
   const {id} = ctx.params
   try {
-    const data = await Document_Model.findById(id)
+    const data = await Document_Model.findOne({
+      [props]: id
+    })
     ctx.status = 200
     ctx.body = {
       code: 1,

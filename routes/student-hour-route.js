@@ -9,7 +9,7 @@ router.post('/list', async (ctx) => {
   await baseApi.List(ctx, StudentHour_col)
 })
 router.get('/:id', async (ctx) => {
-  await baseApi.Detail(ctx, StudentHour_col)
+  await baseApi.Detail(ctx, StudentHour_col, 'studentId')
 })
 
 module.exports = router

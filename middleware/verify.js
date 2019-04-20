@@ -25,6 +25,7 @@ const VerifyToken = async(ctx, next) => {
     ctx.userId = tokenContent.userId
     await next()
   } catch (error) {
+    console.log(error)
     ctx.status = 401
     const body = {
       code: 0,

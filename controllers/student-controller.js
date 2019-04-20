@@ -41,35 +41,62 @@ const Add = async (ctx) => {
  * @param {*} ctx 
  */
 const caculateStudentByMonth = async (ctx) => {
-
-  const body = ctx.request.body
-  const match = {}
-  const { id } = body
-  if (id) {
-    match.$match = {
-      teacherId: id
-    }
-  }
-
-  const poline = [
-    ...match,
-    {
-      $group: {
-        // _id : { $dateToString: { format: "%Y-%m-%d", date: "$createDate" } },
-        _id: { $dateToString: { format: '%Y-%m', date: '$createDate' } },
-        students: {
-          $push: {
-            teacherId: '$teacherId',
-            name: '$name',
-            id: '$_id'
-          }
-        },
-        count: { $sum: 1 }
-      }
-    }
-  ]
+  
   try {
+    const body = ctx.request.body
+    const { query } = body
+
+
+    const poline = [
+      {
+        $group: {
+        // _id : { $dateToString: { format: "%Y-%m-%d", date: "$createDate" } },
+          _id: { $dateToString: { format: '%Y-%m', date: '$createDate' } },
+          key: { $first: {  $month: '$createDate'} },
+          students: {
+            $push: {
+              teacherId: '$teacherId',
+              name: '$name',
+              id: '$_id'
+            }
+          },
+          count: { $sum: 1 }
+        }
+      }
+    ]
+
+    if (query) {
+      const {
+        teacherId,
+        createDate
+      } = query
+      
+
+      const match = {
+        $match: {
+          teacherId,
+          createDate: {
+            $gte: new Date(Number(createDate),1,1, 0, 0, 0),
+            $lte: new Date(Number(createDate),12,31, 23, 59, 59)
+          }
+        }
+      }
+
+      poline.unshift(match)
+    }
+
+    console.log(poline)
+
+
+
     const data = await Student_col.aggregate(poline)
+    // const data = await Student_col.aggregate([{
+    //   $match: {
+    //     createDate: {
+    //       $gte: new Date(2019,1,1)
+    //     }
+    //   }
+    // }])
     ctx.status = 200
     ctx.body = {
       code: 1,
@@ -78,6 +105,7 @@ const caculateStudentByMonth = async (ctx) => {
       desc: '获取成功'
     }
   } catch (error) {
+    console.log(error)
     ctx.status = 400
     ctx.body = {
       code: 0,

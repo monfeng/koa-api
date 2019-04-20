@@ -26,7 +26,7 @@ const BatchCourses = async (ctx) => {
                 { multi: true }
             )
      */
-    
+
 
     const courseQuery = courseIds.map(key => ({
       _id: key
@@ -41,6 +41,49 @@ const BatchCourses = async (ctx) => {
       { $addToSet: { studentIds: id } },
       { upsert: false, multi: true })
 
+
+    // 更新课程表成功 : update.n更新的条数
+    ctx.status = 200
+    ctx.body = {
+      code: 1,
+      msg: 'update success',
+      data: update,
+      desc: '更新成功'
+    }
+
+
+  } catch (error) {
+    ctx.status = 400
+    ctx.body = {
+      code: 0,
+      msg: error,
+      desc: '更新失败'
+    }
+  }
+}
+
+
+/**
+ * 取消课程学生的关联
+ * @param {*} ctx 
+ */
+const DelCoursesStudent = async (ctx) => {
+
+  try {
+    const body = ctx.request.body
+    const { id, courseIds } = body // 学生的id
+    const courseQuery = courseIds.map(key => ({
+      _id: key
+    }))
+
+    const query = {
+      $or: courseQuery
+    }
+
+    const update = await Course_col.update(
+      query,
+      { $pullAll: { studentIds: [id] } },
+      { upsert: false, multi: true })
 
     // 更新课程表成功 : update.n更新的条数
     ctx.status = 200
@@ -89,33 +132,35 @@ const fetchTeacher = async (ctx) => {
     const data = await Course_col.aggregate([
       {
         $lookup:
-          {
-            from: 'teacher',
-            let: { tId: {$toObjectId: '$teacherId'} },
-            pipeline: [
-              { $match:
-                  { $expr: // 接受聚合表达式
-                    { $eq: [ '$_id',  '$$tId' ] }
-                  }
-              },
+        {
+          from: 'teacher',
+          let: { tId: { $toObjectId: '$teacherId' } },
+          pipeline: [
+            {
+              $match:
               {
-                $project: {
-                  teacherName: '$name',
-                  _id: 0
-                }
-              },
-            ],
-            as: 'teacherMsg'
-          }
+                $expr: // 接受聚合表达式
+                  { $eq: ['$_id', '$$tId'] }
+              }
+            },
+            {
+              $project: {
+                teacherName: '$name',
+                _id: 0
+              }
+            },
+          ],
+          as: 'teacherMsg'
+        }
       },
       {
         $replaceRoot: {
           newRoot: {
-            $mergeObjects: [ 
-              { $arrayElemAt: [ '$teacherMsg', 0 ] },  // 拿数组的第一位，变成一个object
+            $mergeObjects: [
+              { $arrayElemAt: ['$teacherMsg', 0] },  // 拿数组的第一位，变成一个object
               '$$ROOT'  // 覆盖数组
-            ] 
-          } 
+            ]
+          }
         }
       },
       {
@@ -150,5 +195,6 @@ const fetchTeacher = async (ctx) => {
 
 module.exports = {
   BatchCourses,
+  DelCoursesStudent,
   fetchTeacher,
 }

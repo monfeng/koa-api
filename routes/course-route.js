@@ -23,5 +23,6 @@ router.delete('/:id', async (ctx) => {
 })
 
 router.post('/teacher', Course_Controller.fetchTeacher)
+router.post('/deleteStudent', Course_Controller.DelCoursesStudent)
 
 module.exports = router

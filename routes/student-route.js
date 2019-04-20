@@ -22,5 +22,6 @@ router.delete('/:id', async (ctx) => {
 })
 
 router.post('/batchCourse', Course_Controller.BatchCourses)
+router.post('/statistics', Student_Controller.caculateStudentByMonth)
 
 module.exports = router

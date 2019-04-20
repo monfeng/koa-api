@@ -1,7 +1,7 @@
 
 
 const mongoose = require('mongoose')
-// 家长姓名，学员的id，课时的数量， 状态：通过1/2， 类型：添加/减少 1/2， 金钱, 学时的类型：购买/赠送1//2, 课时/教师的名称和id
+// 家长姓名，学员的id，课时的数量， 状态：通过1/2， 类型：添加/减少 1/2， 金钱, 学时的类型：购买/赠送1//2/签到/其他, 课时/教师的名称和id
 const Schema = mongoose.Schema
 const ClassHour_col = new Schema({
   name: {

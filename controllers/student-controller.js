@@ -70,15 +70,20 @@ const caculateStudentByMonth = async (ctx) => {
         teacherId,
         createDate
       } = query
-      
 
       const match = {
         $match: {
-          teacherId,
-          createDate: {
-            $gte: new Date(Number(createDate),1,1, 0, 0, 0),
-            $lte: new Date(Number(createDate),12,31, 23, 59, 59)
-          }
+        }
+      }
+
+      if (teacherId) {
+        match.$match.teacherId = teacherId
+      }
+
+      if (createDate) {
+        match.$match.createDate = {
+          $gte: new Date(Number(createDate),1,1, 0, 0, 0),
+          $lte: new Date(Number(createDate),12,31, 23, 59, 59)
         }
       }
 
@@ -116,8 +121,78 @@ const caculateStudentByMonth = async (ctx) => {
 }
 
 
+/**
+ * 统计学生的就读和毕业人数
+ * @param {*} ctx 
+ */
+const caculateStudentNumber = async (ctx) => {
+  
+  try {
+    const body = ctx.request.body
+    const { query } = body
+
+
+    const poline = [
+      {
+        $group: {
+          _id: '$status',
+          count: { $sum: 1 }
+        }
+      }
+    ]
+
+    if (query) {
+      const {
+        teacherId,
+        createDate
+      } = query
+
+      const match = {
+        $match: {
+        }
+      }
+
+      if (teacherId) {
+        match.$match.teacherId = teacherId
+      }
+
+      if (createDate) {
+        match.$match.createDate = {
+          $gte: new Date(Number(createDate),1,1, 0, 0, 0),
+          $lte: new Date(Number(createDate),12,31, 23, 59, 59)
+        }
+      }
+
+      poline.unshift(match)
+    }
+
+    console.log(poline)
+
+
+
+    const data = await Student_col.aggregate(poline)
+    ctx.status = 200
+    ctx.body = {
+      code: 1,
+      msg: 'find success',
+      data,
+      desc: '获取成功'
+    }
+  } catch (error) {
+    console.log(error)
+    ctx.status = 400
+    ctx.body = {
+      code: 0,
+      msg: error,
+      desc: '获取失败'
+    }
+  }
+}
+
+
 
 module.exports = {
   Add,
-  caculateStudentByMonth
+  caculateStudentByMonth,
+  caculateStudentNumber
 }
